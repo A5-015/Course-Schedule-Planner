@@ -1,1 +1,1 @@
-# Course-Schedule-Planner
+# Course Schedule Planner
