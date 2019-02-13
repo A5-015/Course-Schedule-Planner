@@ -7,9 +7,11 @@ class Student:
         self.major = major
         self.majorID = database.returnMajorID(self.major)
 
+    
+
 
 
 #main function to be implemented elsewhere
 student = Student()
-student.setMajor("Civil Engineering")
+student.setMajor("Computer Engineering")
 print(student.majorID)
