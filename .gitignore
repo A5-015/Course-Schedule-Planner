@@ -104,4 +104,4 @@ venv.bak/
 .mypy_cache/
 
 # secrets
-dbConnector.py
+.dbConnector.py
