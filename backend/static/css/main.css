@@ -6,28 +6,23 @@ body
 
 /* Search bar CSS */
 .search-wrap{
-  width: 45%;
+  width: 500px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.search {
-  width: 100%;
-  position: relative;
-}
-
 .logo {
   display: block;
-  max-width:300px;
+  width:300px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .searchTerm {
   float: left;
-  width: 100%;
+  width: 500px;
   border: 3px solid #57068c;
   padding: 10px;
   height: 20px;
@@ -44,7 +39,7 @@ body
 .searchButton {
   position: absolute;
   right: -25px;
-  bottom: -45px;
+  top: 148px;
   width: 60px;
   height: 45px;
   border: 1px solid #57068c;
@@ -57,20 +52,40 @@ body
   text-decoration: none;
 }
 
-/* Bottom list CSS */
-/*
-.bottom-list-wrap{
-  width: 45%;
+.scheduleMakerButton {
   position: absolute;
-  bottom: 0;
-  padding: 1rem;
-  background-color: #efefef;
+  top: 210px;
+  width: 526px;
+  left: 0px;
+  height: 45px;
+  border: 1px solid #57068c;
+  background: #57068c;
   text-align: center;
+  color: #fff;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
 }
-*/
-.bottom-list-table{
+
+.bottom-table{
+  top: 20px;
+  position: relative;
   float: center;
-  width: 100%;
-  /*background-color: black;*/
+  text-align: center;
+  width: 526px;
+  border: none;
+  border-collapse: collapse;
+  font-size: 13pt;
+}
+
+thead{
+  border-bottom: 1px solid #ddd;
+}
+/*
+th, td {
+  border-bottom: 1px solid #ddd;
 }
 */
+
+tr:nth-child(even) {background-color: #f2f2f2;}
