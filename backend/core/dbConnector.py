@@ -33,10 +33,14 @@ def flaskify(header = [], *args):
 class Database:
 
     def returnAllMajors(self):
-        majors = "SELECT major FROM category"
-        mycursor.execute(majors)
-        myresult = mycursor.fetchall()
-        return myresult
+        allMajorQuery = "SELECT major FROM category"
+        mycursor.execute(allMajorQuery)
+        allMajors = mycursor.fetchall()
+
+        header = ['All Majors']
+
+        allMajors = flaskify(header, allMajors)
+        return allMajors
 
     def returnMajorID(self, major):
         majorID = "SELECT id FROM category WHERE major= '" + major + "'"
@@ -114,5 +118,5 @@ class Database:
 
 
 db = Database()
-test = db.returnMajorRequirements("72")
+test = db.returnAllMajors()
 print (test)
