@@ -7,7 +7,7 @@ class Student:
         self.major = major
         self.majorID = database.returnMajorID(self.major)
 
-    
+
 
 
 
