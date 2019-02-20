@@ -47,17 +47,18 @@ class Database:
         keywordQuery = "SELECT title FROM course WHERE title LIKE '%" + keyword + "%'"
         mycursor.execute(keywordQuery)
         courseTitle = mycursor.fetchall()
-        return courseTitle
+
+        keywordQuery = "SELECT professor from professor WHERE professor LIKE '%" + keyword + "%'"
+        mycursor.execute(keywordQuery)
+        meetingTuple = mycursor.fetchall()
+
+        return meetingTuple
 
 
 
 
 
-        # for x in range(len(courseIDArray)):
-        #     peoplesoftIDQuery = "SELECT peoplesoftID FROM course WHERE PK_course= '" + str(courseIDArray[x]) + "'"
-        #     mycursor.execute(peoplesoftIDQuery)
-        #     requiredCourses[x] = mycursor.fetchone()
-        return requiredCourses
+
 
     def MajorQuery(self, major):
         query = "SELECT peoplesoftID FROM course WHERE peoplesoftID LIKE '" +  major + "%'"
@@ -68,5 +69,5 @@ class Database:
 
 
 db = Database()
-test = db.returnCourse("anthr")
+test = db.returnCourse("fyrce")
 print (test)
