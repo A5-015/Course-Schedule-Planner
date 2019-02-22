@@ -1,0 +1,131 @@
+[21-Feb-2019 23:27:30 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 17
+[21-Feb-2019 23:28:02 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'bsimsekc_nishant'@'localhost' (using password: YES) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 6
+[21-Feb-2019 23:32:24 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ';' in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 20
+[21-Feb-2019 23:36:06 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:17
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(30): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 17
+[21-Feb-2019 23:36:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:17
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(30): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 17
+[21-Feb-2019 23:37:40 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:17
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(30): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 17
+[21-Feb-2019 23:38:39 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:17
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(30): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 17
+[21-Feb-2019 23:39:49 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:17
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(31): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 17
+[21-Feb-2019 23:41:35 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 69
+[21-Feb-2019 23:46:08 UTC] PHP Parse error:  syntax error, unexpected '$conn' (T_VARIABLE), expecting function (T_FUNCTION) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 10
+[21-Feb-2019 23:50:35 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 9
+[21-Feb-2019 23:52:51 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'bsimsekc_test'@'localhost' (using password: YES) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 10
+[21-Feb-2019 23:53:35 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:20
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(33): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 20
+[21-Feb-2019 23:55:10 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:20
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(32): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 20
+[21-Feb-2019 23:56:50 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:20
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(32): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 20
+[21-Feb-2019 23:56:52 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:20
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(32): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 20
+[21-Feb-2019 23:56:55 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:20
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(32): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 20
+[21-Feb-2019 23:59:28 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:22
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(34): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 22
+[22-Feb-2019 00:06:53 UTC] PHP Parse error:  syntax error, unexpected 'include' (T_INCLUDE), expecting function (T_FUNCTION) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 9
+[22-Feb-2019 00:07:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:30
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(42): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 30
+[22-Feb-2019 00:07:42 UTC] PHP Warning:  Missing argument 1 for Database::returnAllMajors(), called in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 42 and defined in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 27
+[22-Feb-2019 00:07:42 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:30
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(42): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 30
+[22-Feb-2019 00:08:25 UTC] PHP Warning:  Missing argument 1 for Database::returnAllMajors(), called in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 42 and defined in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 27
+[22-Feb-2019 00:08:25 UTC] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:30
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(42): Database->returnAllMajors()
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 30
+[22-Feb-2019 00:17:52 UTC] PHP Fatal error:  Uncaught Error: Access to undeclared static property: Database::$db_host in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:23
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(18): Database->db_connect()
+#1 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(41): Database->__construct()
+#2 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 23
+[22-Feb-2019 00:18:07 UTC] PHP Fatal error:  Uncaught Error: Access to undeclared static property: Database::$db_host in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:19
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(14): Database->db_connect()
+#1 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(39): Database->__construct()
+#2 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 19
+[22-Feb-2019 00:20:02 UTC] PHP Fatal error:  Uncaught Error: Access to undeclared static property: Database::$db_host in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:19
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(14): Database->db_connect()
+#1 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(39): Database->__construct()
+#2 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 19
+[22-Feb-2019 00:20:53 UTC] PHP Fatal error:  Uncaught Error: Access to undeclared static property: Database::$db_host in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:19
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(14): Database->db_connect()
+#1 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(39): Database->__construct()
+#2 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 19
+[22-Feb-2019 00:21:39 UTC] PHP Fatal error:  Uncaught Error: Access to undeclared static property: Database::$db_host in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:19
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(14): Database->db_connect()
+#1 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(39): Database->__construct()
+#2 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 19
+[22-Feb-2019 00:24:40 UTC] PHP Fatal error:  Cannot use [] for reading in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 29
+[22-Feb-2019 00:24:47 UTC] PHP Fatal error:  Cannot use [] for reading in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 29
+[22-Feb-2019 00:27:04 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 28
+[22-Feb-2019 00:27:18 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 33
+[22-Feb-2019 00:27:48 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 33
+[22-Feb-2019 01:23:26 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 61
+[22-Feb-2019 01:29:39 UTC] PHP Parse error:  syntax error, unexpected '$majorID' (T_VARIABLE) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 47
+[22-Feb-2019 01:29:54 UTC] PHP Parse error:  syntax error, unexpected '$majorID' (T_VARIABLE) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 47
+[22-Feb-2019 01:29:57 UTC] PHP Parse error:  syntax error, unexpected '$majorID' (T_VARIABLE) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 47
+[22-Feb-2019 01:30:59 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 51
+[22-Feb-2019 01:31:11 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function arrayify() in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php:49
+Stack trace:
+#0 /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php(69): Database->returnMajorID('Computer Engine...')
+#1 {main}
+  thrown in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 49
+[22-Feb-2019 02:17:44 UTC] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC), expecting ';' or '{' in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 55
+[22-Feb-2019 02:17:55 UTC] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC), expecting ';' or '{' in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 55
+[22-Feb-2019 02:17:58 UTC] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC), expecting ';' or '{' in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 55
+[22-Feb-2019 02:53:21 UTC] PHP Parse error:  syntax error, unexpected '$majorID' (T_VARIABLE) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 52
+[22-Feb-2019 02:55:02 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 46
+[22-Feb-2019 02:56:38 UTC] PHP Parse error:  syntax error, unexpected ':', expecting ',' or ';' in /home/bsimsekc/public_html/addons/nyuad.app/classes/backend/dbConnector.php on line 30

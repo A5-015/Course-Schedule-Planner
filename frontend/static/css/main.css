@@ -1,0 +1,89 @@
+body
+{
+  background-color: #ffffff;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Search bar CSS */
+.search-wrap{
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.logo {
+  display: block;
+  width:300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.searchTerm {
+  float: left;
+  width: 500px;
+  border: 3px solid #57068c;
+  padding: 10px;
+  height: 20px;
+  border-radius: 25px;
+  outline: none;
+  color: black;
+  font-size: 13pt;
+}
+
+.searchTerm:focus{
+  color: #57068c;
+}
+
+#searchButton {
+  position: absolute;
+  right: -25px;
+  top: 160px;
+  width: 60px;
+  height: 45px;
+  color: #57068c;
+  text-align: center;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.scheduleMakerButton {
+  position: absolute;
+  top: 210px;
+  width: 526px;
+  left: 0px;
+  height: 45px;
+  border: 1px solid #57068c;
+  background: #57068c;
+  text-align: center;
+  color: #fff;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.bottom-table{
+  top: 20px;
+  position: relative;
+  float: center;
+  text-align: center;
+  width: 526px;
+  border: none;
+  border-collapse: collapse;
+  font-size: 13pt;
+}
+
+thead{
+  border-bottom: 1px solid #ddd;
+}
+/*
+th, td {
+  border-bottom: 1px solid #ddd;
+}
+*/
+
+tr:nth-child(even) {background-color: #f2f2f2;}
