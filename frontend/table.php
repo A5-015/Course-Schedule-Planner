@@ -1,12 +1,12 @@
 <?php
 
-include "./backend/dbConnector.php";
+include "../backend/dbConnector.php";
 
 $q=$_GET["q"];
 
 if($q !=  ""){
 
-  $thing = $db -> returnCourses($q);
+  $thing = $db -> returnAllMajors($q);
 
 
   //$thing = $db -> returnAllMajors();
