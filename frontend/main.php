@@ -1,8 +1,7 @@
 <?php
-
 session_start();
 
-//$step = $_GET["step"];
+
 
 if (!isset($_SESSION["step"])) {
     $_SESSION["step"] = 0;
@@ -13,6 +12,13 @@ if(isset($_POST['SubmitButton'])){
   $step = $_SESSION["step"];
   $step = $step + 1;
   $_SESSION["step"] = $step;
+
+  if($step == 2){
+      require_once("./backend/student.php");
+      $student -> setMajor($_POST['studentMajorID']);
+      //echo $student -> major[0][0];
+      $student -> transfer();
+  }
 }
 
 if(isset($_POST['jumpToStep3'])){
@@ -28,8 +34,6 @@ $step = $_SESSION["step"];
 $_SESSION["requiredContent"] = "";
 
 //echo $step;
-
-
 ?>
 
 <!DOCTYPE html>
@@ -42,23 +46,59 @@ $_SESSION["requiredContent"] = "";
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://use.fontawesome.com/21797530af.js"></script>
   <script>
-  function showResult(str) {
-    if (window.XMLHttpRequest) {
-      // code for IE7+, Firefox, Chrome, Opera, Safari
-      xmlhttp=new XMLHttpRequest();
-    } else {  // code for IE6, IE5
-      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
 
-    xmlhttp.onreadystatechange=function() {
-      if (this.readyState==4 && this.status==200) {
-        document.getElementById("livesearch").innerHTML=this.responseText;;
-      }
-    }
+  //Getting value from "ajax.php".
+function fill(Value) {
+   //Assigning value to "search" div in "search.php" file.
+   $('#search').val(Value);
+   //Hiding "display" div in "search.php" file.
+   $('#display').hide();
+}
 
-    xmlhttp.open("GET","./frontend/contentCreator.php?query="+str,true);
-    xmlhttp.send();
-  }
+function delay(callback, ms) {
+  var timer = 0;
+  return function() {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      callback.apply(context, args);
+    }, ms || 0);
+  };
+}
+
+$(document).ready(function() {
+   //On pressing a key on "Search box" in "search.php" file. This function will be called.
+   $('#search').keyup(delay(function (e) {
+       //Assigning search box value to javascript variable named as "name".
+       var name = $('#search').val();
+       //Validating, if "name" is empty.
+       if (name == "") {
+           //Assigning empty value to "display" div in "search.php" file.
+           $("#livesearch").html("");
+       }
+       //If name is not empty.
+       else {
+           //AJAX is called.
+           $.ajax({
+               //AJAX type is "Post".
+               type: "POST",
+               //Data will be sent to "ajax.php".
+               url: "./frontend/contentCreatorQuery.php",
+               //Data, that will be sent to "ajax.php".
+               data: {
+                   //Assigning value of "name" into "search" variable.
+                   search: name
+               },
+               //If result found, this funtion will be called.
+               success: function(html) {
+                   //Assigning result to "display" div in "search.php" file.
+                   $("#livesearch").html(html).show();
+               }
+           });
+       }
+   }, 300));
+});
+
 </script>
 </head>
 
@@ -67,7 +107,7 @@ $_SESSION["requiredContent"] = "";
   <div class="search-wrap">
     <?php
 
-      if(($step == 0)||($step == 1)){
+      if(($step == 0)||($step == 1)||($step == 2)){
         echo "
         <object class='logo' type='image/svg+xml' data='./frontend/static/images/logo.svg'>
           Your browser does not support SVG
@@ -94,7 +134,7 @@ $_SESSION["requiredContent"] = "";
         echo "<form action='' method='post' role='form'> ";
 
         $_SESSION["requiredContent"] = "majorSelectionPageList";
-        include "./frontend/contentCreator.php";
+        include "./frontend/contentCreatorSession.php";
         $_SESSION["requiredContent"] = "";
 
         echo "
@@ -112,9 +152,28 @@ $_SESSION["requiredContent"] = "";
 
       } else if($step == 2){
 
-        echo $step;
+        echo "
+          <div class='studentInformation'>
 
-        //table kullan
+          Selected major: ";
+
+          $_SESSION["requiredContent"] = "getMajorNameByID";
+          include "./frontend/contentCreatorSession.php";
+          $_SESSION["requiredContent"] = "";
+
+        echo " <br> Please select classes that you have already taken
+          </div>
+        ";
+
+        echo "
+          <button type='submit' class='scheduleMakerButton' name='SubmitButton'>
+            <i>Continue</i>
+          </button>";
+
+        $_SESSION["requiredContent"] = "majorRequirementSelectionList";
+        include "./frontend/contentCreatorSession.php";
+        $_SESSION["requiredContent"] = "";
+
       }
     ?>
 
@@ -123,11 +182,9 @@ $_SESSION["requiredContent"] = "";
     <div id='livesearch'>
     <?php
       if($step == 0){
-
         $_SESSION["requiredContent"] = "homePageRegularList";
-        include "./frontend/contentCreator.php";
+        include "./frontend/contentCreatorSession.php";
         $_SESSION["requiredContent"] = "";
-
       }
     ?>
     </div>

@@ -82,6 +82,30 @@ body
   text-decoration: none;
 }
 
+.studentInformation {
+  position: absolute;
+  top: 130px;
+  width: 526px;
+  left: 0px;
+  height: 45px;
+  border: none;
+  text-align: left;
+  color: #57068c;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.bottom-table-major-requirement{
+  top: 130px;
+  position: relative;
+  float: center;
+  text-align: center;
+  width: 526px;
+  border: none;
+  border-collapse: collapse;
+  font-size: 13pt;
+}
+
 .bottom-table{
   top: 20px;
   position: relative;
@@ -96,11 +120,11 @@ body
 thead{
   border-bottom: 1px solid #ddd;
 }
-/*
+
 th, td {
-  border-bottom: 1px solid #ddd;
+  padding: 8px;
 }
-*/
+
 
 tr:nth-child(even) {background-color: #f2f2f2;}
 
@@ -127,4 +151,14 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
 .select-style select:focus {
     outline: none;
+}
+
+.clickable-row{
+  cursor: pointer;
+}
+
+.clickable-row:hover{
+  cursor: pointer;
+  background: #57068c;
+  color: white;
 }
