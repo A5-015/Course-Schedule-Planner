@@ -8,13 +8,24 @@ if (!isset($_SESSION["step"])) {
     $_SESSION["step"] = 0;
 }
 
-if(isset($_POST['SubmitButton'])){ //check if form was submitted
+//check if form was submitted
+if(isset($_POST['SubmitButton'])){
   $step = $_SESSION["step"];
   $step = $step + 1;
   $_SESSION["step"] = $step;
 }
 
+if(isset($_POST['jumpToStep3'])){
+  $_SESSION["step"] = 3;
+}
+
+if(isset($_POST['studentMajor'])){
+  //echo $_POST['studentMajor'];
+}
+
 $step = $_SESSION["step"];
+
+$_SESSION["requiredContent"] = "";
 
 //echo $step;
 
@@ -45,7 +56,7 @@ $step = $_SESSION["step"];
       }
     }
 
-    xmlhttp.open("GET","table.php?q="+str,true);
+    xmlhttp.open("GET","./frontend/contentCreator.php?query="+str,true);
     xmlhttp.send();
   }
 </script>
@@ -54,37 +65,72 @@ $step = $_SESSION["step"];
 <body>
 
   <div class="search-wrap">
-    <object class="logo" type="image/svg+xml" data="./frontend/static/images/logo.svg">
-      Your browser does not support SVG
-    </object>
-    <br>
-      <input type="text" id="search" class="searchTerm" onkeyup="showResult(this.value)" placeholder="Search for classes, professors, subjects, etc.">
+    <?php
 
-        <i class="fa fa-search" id="searchButton"></i>
+      if(($step == 0)||($step == 1)){
+        echo "
+        <object class='logo' type='image/svg+xml' data='./frontend/static/images/logo.svg'>
+          Your browser does not support SVG
+        </object>
+        <br>
+        ";
+      }
 
-    <form action="" method="post" role="form">
-      <button type="submit" class="scheduleMakerButton" name="SubmitButton">
-        <i>Make your class schedule</i>
-      </button>
-    </form>
+      if($step == 0){
+
+        echo "
+        <input type='text' id='search' class='searchTerm'onkeyup='showResult(this.value)' placeholder='Search for classes, professors, subjects...'>
+        <i class='fa fa-search' id='searchButton'></i>
+
+        <form action='' method='post' role='form'>
+          <button type='submit' class='scheduleMakerButton' name='SubmitButton'>
+            <i>Make your class schedule</i>
+          </button>
+        </form>
+        ";
+
+      } else if($step == 1){
+
+        echo "<form action='' method='post' role='form'> ";
+
+        $_SESSION["requiredContent"] = "majorSelectionPageList";
+        include "./frontend/contentCreator.php";
+        $_SESSION["requiredContent"] = "";
+
+        echo "
+          <button type='submit' class='scheduleMakerButton' name='SubmitButton'>
+            <i>Continue</i>
+          </button>
+        </form>
+
+        <form action='' method='post' role='form'>
+          <button type='submit' class='scheduleMakerButton2' name='jumpToStep3'>
+            <i>I haven't decided my major yet</i>
+          </button>
+        </form>
+        ";
+
+      } else if($step == 2){
+
+        echo $step;
+
+        //table kullan
+      }
+    ?>
 
     <hr style="height:40pt; visibility:hidden;" />
 
-  <?php
-    if($step == 0){
-      echo "
-            <div id='livesearch'>
-              <table class='bottom-table'>
-                <tbody>";
+    <div id='livesearch'>
+    <?php
+      if($step == 0){
 
-      include "table.php";
+        $_SESSION["requiredContent"] = "homePageRegularList";
+        include "./frontend/contentCreator.php";
+        $_SESSION["requiredContent"] = "";
 
-      echo "
-                </tbody>
-              </table>
-            </div>";
-    }
-  ?>
+      }
+    ?>
+    </div>
 
   </div>
 </body>

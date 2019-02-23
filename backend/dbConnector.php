@@ -20,19 +20,11 @@ class Database
         return $connection;
     }
 
-    public function arrayify($list, $header)
+    public function arrayify($list)
     {
-        $i = 0;
         while ($row = mysqli_fetch_array($list)) {
-            $j = 0;
-            while ($j == sizeof($header)) {
-                $array[$i][$j] = $row[$header[$j]];
-                echo $array[$i][$j];
-                $j++;
-            }
-            $i++;
+            $array[] = $row;
         }
-
         return $array;
     }
 
@@ -40,9 +32,7 @@ class Database
     {
         $allMajorQuery = "SELECT major, id FROM category";
         $allMajorsList = $this->connection->query($allMajorQuery);
-        $majorArray = $this->arrayify($allMajorsList, $header);
-
-        $header = ["major", "id"];
+        $majorArray[] = $this->arrayify($allMajorsList);
 
         return $majorArray;
     }
@@ -52,11 +42,31 @@ class Database
         $majorIDQuery = "SELECT id FROM category WHERE major = '$major'";
         $majorID = $this->connection->query($majorIDQuery);
 
-        $header = ["major"];
-
-        $majorID = $this->arrayify($majorID, $header);
+        $majorID = $this->arrayify($majorID);
 
         return $majorID[0];
+    }
+
+    public function returnMajorReq($majorID)
+    {
+        $courseIDQuery = "SELECT FK_course FROM appears WHERE categoryID = $majorID AND required = 'true'";
+        $courseIDList = $this->connection->query($courseIDQuery);
+        $listNum = $courseIDList->num_rows;
+        $courseIDArray[] = $this->arrayify($courseIDList);
+
+        $x=0;
+        while ($x < $listNum) {
+         $courseIDArr[] = $courseIDArray[0][$x][0];
+         $x++;
+        }
+
+        $peoplesoftIDQuery = "SELECT peoplesoftID FROM course WHERE PK_course = $courseIDArr[0]";
+        $peoplesoftIDList = $this->connection->query($peoplesoftIDQuery);
+        $peopleSoftIDArray[] = $this->arrayify($peoplesoftIDList);
+
+        return $peoplesoftIDArray;
+
+
     }
 
     public function returnCourses($keyword)
@@ -64,7 +74,7 @@ class Database
         $keywordQuery = "SELECT title FROM course WHERE title LIKE '%$keyword%'";
         $courseTitleList = $this->connection->query($keywordQuery);
 
-        $courseArray = $this->arrayify($courseTitleList, "title");
+        $courseArray = $this->arrayify($courseTitleList);
 
         return $courseArray;
     }
@@ -74,4 +84,5 @@ class Database
 
 
 $db = new Database();
-print_r($db->returnallMajors());
+$thing = $db->returnMajorReq("72");
+print_r($thing);
