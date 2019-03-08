@@ -74,14 +74,6 @@ class Database
         return $array;
     }
 
-
-
-
-
-
-
-
-
     // public function querySet($passedQuery, $passedArray, $returnArray)
     // {
     //     $x =0;
@@ -216,62 +208,6 @@ class Database
     //     return $courseArray;
     // }
 
-    // public function returnCourses($keyword)
-    // {
-    //     //instantate the FINAL array as an array
-    //     $courseArray = [];
-    //
-    //     //compact query for KEYWORD, current SEMESTER, current YEAR
-    //     $keywordQuery = "SELECT DISTINCT title, peoplesoftID
-    //                    FROM course INNER JOIN section
-    //                       ON course.PK_course = section.FK_course
-    //                    WHERE course.title LIKE '%$keyword%'
-    //                    AND section.term LIKE '%Spring%'
-    //                    AND section.term LIKE '%2019%'";
-    //
-    //     //connection and array making code
-    //     $courseTitleList = $this->connection->query($keywordQuery);
-    //     $courseResultArray = $this->arrayify($courseTitleList);
-    //
-    //     //adds resulting array to final array iteratively
-    //     $i=0;
-    //     while ($i < sizeof($courseResultArray)) {
-    //         array_push($courseArray, $courseResultArray[$i]);
-    //         $i++;
-    //     }
-    //
-    //     $professorQuery = "SELECT DISTINCT section.FK_course
-    //                      FROM professor
-    //                       INNER JOIN meeting
-    //                      		ON professor.FK_meeting = meeting.PK_meeting
-    //                       INNER JOIN section
-    //                       	ON meeting.FK_section = section.PK_section
-    //                       WHERE professor.professor LIKE '%$keyword%'";
-    //
-    //     $professorList = $this->connection->query($professorQuery);
-    //     $professorResultArray = $this->arrayify($professorList);
-    //     $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
-    //
-    //
-    //     $j=0;
-    //     while ($j < sizeof($professorResultArray)) {
-    //         $professorQuery = "SELECT DISTINCT title, peoplesoftID
-    //                        FROM course
-    //                        WHERE PK_course = '$professorResultArray[$j]'";
-    //
-    //         $professorList = $this->connection->query($professorQuery);
-    //         $professorResult[] = mysqli_fetch_row($professorList);
-    //         array_push($courseArray, $professorResult[$j]);
-    //         $j++;
-    //     }
-    //
-    //     return $courseArray;
-    // }
-    //
-    // public function returnAllCourses(){
-    //
-    // }
-
     public function returnCourses(bool $returnAll, $keyword)
     {
         //instantate the FINAL array as an array
@@ -283,23 +219,24 @@ class Database
                           ON course.PK_course = section.FK_course
                        WHERE section.term LIKE '%Spring%'
                        AND section.term LIKE '%2019%'";
-        //AND course.title LIKE '%$keyword%';
+                       //AND course.title LIKE '%$keyword%';
 
-        if ($returnAll == false) {
-            $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%'";
+        if ($returnAll == FALSE){
 
-            //connection and array making code
-            $courseTitleList = $this->connection->query($keywordQuery);
-            $courseResultArray = $this->arrayify($courseTitleList);
+          $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%'";
 
-            //adds resulting array to final array iteratively
-            $i=0;
-            while ($i < sizeof($courseResultArray)) {
-                array_push($courseArray, $courseResultArray[$i]);
-                $i++;
-            }
+          //connection and array making code
+          $courseTitleList = $this->connection->query($keywordQuery);
+          $courseResultArray = $this->arrayify($courseTitleList);
 
-            $professorQuery = "SELECT DISTINCT section.FK_course
+          //adds resulting array to final array iteratively
+          $i=0;
+          while ($i < sizeof($courseResultArray)) {
+              array_push($courseArray, $courseResultArray[$i]);
+              $i++;
+          }
+
+          $professorQuery = "SELECT DISTINCT section.FK_course
                            FROM professor
                             INNER JOIN meeting
                               ON professor.FK_meeting = meeting.PK_meeting
@@ -307,38 +244,40 @@ class Database
                               ON meeting.FK_section = section.PK_section
                             WHERE professor.professor LIKE '%$keyword%'";
 
-            $professorList = $this->connection->query($professorQuery);
-            $professorResultArray = $this->arrayify($professorList);
-            $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
+          $professorList = $this->connection->query($professorQuery);
+          $professorResultArray = $this->arrayify($professorList);
+          $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
 
 
-            $j=0;
-            while ($j < sizeof($professorResultArray)) {
-                $professorQuery = "SELECT DISTINCT title, peoplesoftID
+          $j=0;
+          while ($j < sizeof($professorResultArray)) {
+              $professorQuery = "SELECT DISTINCT title, peoplesoftID
                              FROM course
                              WHERE PK_course = '$professorResultArray[$j]'";
 
-                $professorList = $this->connection->query($professorQuery);
-                $professorResult[] = mysqli_fetch_row($professorList);
-                array_push($courseArray, $professorResult[$j]);
-                $j++;
-            }
-        } else {
-            //connection and array making code
-            $courseTitleList = $this->connection->query($keywordQuery);
-            $courseResultArray = $this->arrayify($courseTitleList);
+              $professorList = $this->connection->query($professorQuery);
+              $professorResult[] = mysqli_fetch_row($professorList);
+              array_push($courseArray, $professorResult[$j]);
+              $j++;
+          }
 
-            //adds resulting array to final array iteratively
-            $i=0;
-            while ($i < sizeof($courseResultArray)) {
-                array_push($courseArray, $courseResultArray[$i]);
-                $i++;
-            }
+        }
+
+        else {
+          //connection and array making code
+          $courseTitleList = $this->connection->query($keywordQuery);
+          $courseResultArray = $this->arrayify($courseTitleList);
+
+          //adds resulting array to final array iteratively
+          $i=0;
+          while ($i < sizeof($courseResultArray)) {
+              array_push($courseArray, $courseResultArray[$i]);
+              $i++;
+          }
         }
 
         return $courseArray;
     }
-
 
 
     public function returnCourseName($peoplesoftIDArray)

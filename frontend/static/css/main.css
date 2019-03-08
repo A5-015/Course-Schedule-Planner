@@ -1,193 +1,208 @@
-body
-{
-  background-color: #ffffff;
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+body {
+  background-color: white;
   font-family: 'Open Sans', sans-serif;
 }
 
-/* Search bar CSS */
-.search-wrap{
-  width: 500px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
+/*
 .logo {
   display: block;
   width:300px;
   margin-left: auto;
   margin-right: auto;
 }
+*/
+.skelethon,
+.standartTable,
+.standartLongTable {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 0px;
+  text-align: center;
+  border-collapse: collapse;
+}
 
-.searchTerm {
-  float: left;
-  width: 500px;
+.logo {
+  width: 300px;
+}
+
+/***** ZEROTH PAGE - CSS START *****/
+.searchBox {
+  width: 600px;
+  height: 40px;
   border: 3px solid #57068c;
-  padding: 10px;
-  height: 20px;
   border-radius: 25px;
   outline: none;
   color: black;
   font-size: 13pt;
+  padding: 5px;
 }
 
-.searchTerm:focus{
-  color: #57068c;
-}
-
-.searchTerm2 {
-    position: absolute;
-  float: left;
-  top: 270px;
-  width: 500px;
-  border: 3px solid #57068c;
-  padding: 10px;
-  height: 20px;
-  border-radius: 25px;
-  outline: none;
-  color: black;
-  font-size: 13pt;
-}
-
-.searchTerm2:focus{
+.searchBox:focus {
   color: #57068c;
 }
 
 #searchButton {
-  position: absolute;
-  right: -25px;
-  top: 160px;
   width: 60px;
-  height: 45px;
-  color: #57068c;
-  text-align: center;
-  border-radius: 25px;
-  cursor: pointer;
   font-size: 20px;
-  text-decoration: none;
 }
 
-.scheduleMakerButton {
-  position: absolute;
-  top: 210px;
-  width: 526px;
-  left: 0px;
-  height: 45px;
+.submitButton {
+  width: 600px;
+  height: 40px;
   border: 1px solid #57068c;
-  background: #57068c;
-  text-align: center;
-  color: #fff;
   border-radius: 25px;
-  cursor: pointer;
-  font-size: 20px;
-  text-decoration: none;
-}
-
-.scheduleMakerButton2 {
-  position: absolute;
-  top: 270px;
-  width: 526px;
-  left: 0px;
-  height: 45px;
-  border: 1px solid #57068c;
-  background: #57068c;
-  text-align: center;
-  color: #fff;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 20px;
-  text-decoration: none;
-}
-
-.studentInformation {
-  position: absolute;
-  top: 130px;
-  width: 526px;
-  left: 0px;
-  height: 45px;
-  border: none;
-  text-align: left;
-  color: #57068c;
-  font-size: 20px;
-  text-decoration: none;
-}
-
-.bottom-table-major-requirement{
-  top: 130px;
-  position: relative;
-  float: center;
-  text-align: center;
-  width: 526px;
-  border: none;
-  border-collapse: collapse;
-  font-size: 13pt;
-}
-
-.bottom-table-major-requirement2{
-  top: 10px;
-  position: relative;
-  float: center;
-  text-align: center;
-  width: 526px;
-  border: none;
-  border-collapse: collapse;
-  font-size: 13pt;
-}
-
-.bottom-table{
-  top: 20px;
-  position: relative;
-  float: center;
-  text-align: center;
-  width: 526px;
-  border: none;
-  border-collapse: collapse;
-  font-size: 13pt;
-}
-
-thead{
-  border-bottom: 1px solid #ddd;
-}
-
-th, td {
-  padding: 8px;
-}
-
-
-tr:nth-child(even) {background-color: #f2f2f2;}
-
-.select-style {
-  width: 500px;
-  border: 3px solid #57068c;
-  padding: 10px;
-  height: 20px;
-  border-radius: 25px;
-  outline: none;
-  overflow: hidden;
-}
-
-.select-style select {
-    border: none;
-    background: transparent;
-    color: #57068c;
-    width: 526px;
-}
-
-.select-style option {
-  font-size: 19pt;
-}
-
-.select-style select:focus {
-    outline: none;
-}
-
-.clickable-row{
-  cursor: pointer;
-}
-
-.clickable-row:hover{
-  cursor: pointer;
   background: #57068c;
   color: white;
+  text-align: center;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: none;
 }
+
+.standartTable tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.standartTable th, td {
+  width: 600px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/***** ZEROTH PAGE - CSS END *****/
+/***** FIRST PAGE - CSS START *****/
+.dropDownMenu {
+  width: 600px;
+  border: 3px solid #57068c;
+  /*padding: 10px;*/
+  height: 40px;
+  border-radius: 25px;
+  outline: none;
+}
+
+/***** FIRST PAGE - CSS END *****/
+/***** SECOND PAGE - CSS START *****/
+.studentInformationText {
+  color: #57068c;
+  text-align: left;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.standartTable .clickableTableRow {
+  cursor: pointer;
+  text-align: center;
+}
+
+.standartTable .clickableTableRow:hover {
+  cursor: pointer;
+  background-color: #57068c;
+  color: white;
+}
+
+/***** SECOND PAGE - CSS END *****/
+/***** THIRD PAGE - CSS START *****/
+.checkbox{
+     -webkit-appearance: none;
+     -moz-appearance: none;
+     appearance: none;
+     display: inline-block;
+     position: relative;
+     background-color: #f1f1f1;
+     color: #666;
+     top: 10px;
+     height: 30px;
+     width: 30px;
+     border: 0.1pt solid #57068c;
+     border-radius: 50px;
+     cursor: pointer;
+     margin-right: 7px;
+     outline: none;
+}
+.checkbox:checked::before{
+     position: absolute;
+     font: 13px/1 'Open Sans', sans-serif;
+     left: 11px;
+     top: 7px;
+     content: '\02143';
+     transform: rotate(40deg);
+     color: #57068c;
+}
+
+.checkbox:checked{
+     background-color: #f1f1f1;
+}
+
+label{
+     cursor: pointer;
+}
+
+.constarintsTable{
+  margin-left: 70px;
+  width: 500px;
+  text-align: left;
+}
+
+.standartLongTable{
+  overflow-y:scroll;
+  height:600px;
+  display:block;
+  border-width: 0.25px;
+  border-style: solid;
+  border-color: #f1f1f1;
+}
+
+.standartLongTable tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.standartLongTable th, td {
+  width: 600px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.standartLongTable .clickableTableRow {
+  cursor: pointer;
+  text-align: center;
+}
+
+.standartLongTable .clickableTableRow:hover {
+  cursor: pointer;
+  background-color: #57068c;
+  color: white;
+}
+
+.standartLongTable::-webkit-scrollbar {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 11px;
+}
+
+.standartLongTable::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 1px solid white; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .5);
+}
+
+
+.standartLongTable::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+}
+
+
+
+/***** THIRD PAGE - CSS END *****/

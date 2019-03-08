@@ -9,30 +9,30 @@ if (!isset($_SESSION["step"])) {
 
 require_once("./backend/student.php");
 $step = $_SESSION["step"];
-if($step >= 2){
-$student -> fetchFromSession();
+if ($step >= 2) {
+    $student -> fetchFromSession();
 }
 
 //check if form was submitted
-if(isset($_POST['SubmitButton'])){
-  $step = $step + 1;
-  $_SESSION["step"] = $step;
+if (isset($_POST['SubmitButton'])) {
+    $step = $step + 1;
+    $_SESSION["step"] = $step;
 
-  if($step == 2){
-      $post = array(array($_POST['studentMajorID']));
-      $student -> setMajor($post[0][0]);
-      $student -> pushToSession();
-  }
+    if ($step == 2) {
+        $post = array(array($_POST['studentMajorID']));
+        $student -> setMajor($post[0][0]);
+        $student -> pushToSession();
+    }
 }
 
-if(isset($_POST['jumpToStep3'])){
-  $student -> setMajor(" ");
-  $student -> pushToSession();
-  $_SESSION["step"] = 3;
+if (isset($_POST['jumpToStep3'])) {
+    $student -> setMajor(" ");
+    $student -> pushToSession();
+    $_SESSION["step"] = 3;
 }
 
-if(isset($_POST['studentMajor'])){
-  //echo $_POST['studentMajor'];
+if (isset($_POST['studentMajor'])) {
+    //echo $_POST['studentMajor'];
 }
 
 $step = $_SESSION["step"];
@@ -106,126 +106,274 @@ $(document).ready(function() {
 });
 
 </script>
+
+<script>
+<?php
+for($x = 1; $x < 9; $x++){
+  echo "
+  function processCheckboxes".$x."() {
+    $.ajax( {
+        type: 'POST',
+        url: './frontend/contentCreatorQuery.php',
+        data: {constraintID: ".$x."}
+    } );
+  }
+  ";
+}
+?>
+</script>
+
 </head>
 
 <body>
+    <table class="skelethon">
+      <tbody>
+      <?php
+        if (($step == 0)||($step == 1)||($step == 2)||($step == 3)) {
+            echo "
+            <tr>
+                <td>
+                  <img src='./frontend/static/images/logo.png' alt='nyuad.app | classes logo' class = 'logo'>
+                </td>
+            </tr>";
+        }
 
-  <div class="search-wrap">
-    <?php
+        if ($step == 0) {
+            echo "
+            <tr>
+                <td>
+                  <input type='text' id='search' class='searchBox'onkeyup='showResult(this.value)' placeholder='Search for courses, professors, subjects...'>
+                  <i class='fa fa-search' id='searchButton'></i>
+                </td>
+            </tr>
 
-      if(($step == 0)||($step == 1)||($step == 2)||($step == 3)){
-        echo "
-        <object class='logo' type='image/svg+xml' data='./frontend/static/images/logo.svg'>
-          Your browser does not support SVG
-        </object>
-        <br>
-        ";
-      }
+            <tr>
+                <td>
+                  <form action='' method='post' role='form'>
+                    <button type='submit' class='submitButton' name='SubmitButton'>
+                      <i>Make your course schedule</i>
+                    </button>
+                  </form>
+                </td>
+            </tr>";
+        } elseif ($step == 1) {
+            echo "
+            <tr>
+                <td>
+                  <form action='' method='post' role='form'> ";
 
-      if($step == 0){
+            $_SESSION["requiredContent"] = "majorSelectionPageList";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContent"] = "";
 
-        echo "
-        <input type='text' id='search' class='searchTerm'onkeyup='showResult(this.value)' placeholder='Search for classes, professors, subjects...'>
-        <i class='fa fa-search' id='searchButton'></i>
+            echo "
+                  <hr style='height:8px; visibility:hidden;' />
 
-        <form action='' method='post' role='form'>
-          <button type='submit' class='scheduleMakerButton' name='SubmitButton'>
-            <i>Make your class schedule</i>
-          </button>
-        </form>
-        ";
+                  <button type='submit' class='submitButton' name='SubmitButton'>
+                    <i>Continue</i>
+                  </button>
 
-      } else if($step == 1){
+                </form>
+              </td>
+          </tr>
 
-        echo "<form action='' method='post' role='form'> ";
+          <tr>
+              <td>
+                <form action='' method='post' role='form'>
+                  <button type='submit' class='submitButton' name='jumpToStep3'>
+                    <i>I haven't decided my major yet</i>
+                  </button>
+                </form>
+              </td>
+          </tr>";
+        } elseif ($step == 2) {
+            echo "
+            <tr>
+                <td>
+                    <div class='studentInformationText'>
 
-        $_SESSION["requiredContent"] = "majorSelectionPageList";
-        include "./frontend/contentCreatorSession.php";
-        $_SESSION["requiredContent"] = "";
+                      Selected major: ";
 
-        echo "
-          <button type='submit' class='scheduleMakerButton' name='SubmitButton'>
-            <i>Continue</i>
-          </button>
-        </form>
+            $_SESSION["requiredContent"] = "getMajorNameByID";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContent"] = "";
 
-        <form action='' method='post' role='form'>
-          <button type='submit' class='scheduleMakerButton2' name='jumpToStep3'>
-            <i>I haven't decided my major yet</i>
-          </button>
-        </form>
-        ";
+            echo "
+                      <br> Please select courses that you have already completed
+                    </div>
+                </td>
+            </tr>";
 
-      } else if($step == 2){
+            echo "
+            <tr>
+                <td>
+                    <form action='' method='post' role='form'>
+                    <button type='submit' class='submitButton' name='SubmitButton'>
+                      <i>Continue</i>
+                    </button>
+                    </form>
+                </td>
+            </tr>
 
-        echo "
-          <div class='studentInformation'>
+            <tr>
+                <td>";
 
-          Selected major: ";
+            $_SESSION["requiredContent"] = "requirementSelectionList";
+            $_SESSION["requiredContentArgument"] = "major";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContentArgument"] = "";
+            $_SESSION["requiredContent"] = "";
 
-          $_SESSION["requiredContent"] = "getMajorNameByID";
-          include "./frontend/contentCreatorSession.php";
-          $_SESSION["requiredContent"] = "";
+            echo "
+                </td>
+            </tr>";
+        } elseif ($step == 3) {
+            echo "
+            <tr>
+                <td>
+                  <div class='studentInformationText'>
+                    Selected Major: ";
 
-        echo " <br> Please select classes that you have already taken
-          </div>
-        ";
+            $_SESSION["requiredContent"] = "getMajorNameByID";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContent"] = "";
 
-        echo "
-          <form action='' method='post' role='form'>
-          <button type='submit' class='scheduleMakerButton' name='SubmitButton'>
-            <i>Continue</i>
-          </button>
-          </form>
-          ";
+            echo "
+                </div>
+              </td>
+            </tr>
 
-        $_SESSION["requiredContent"] = "majorRequirementSelectionList";
-        include "./frontend/contentCreatorSession.php";
-        $_SESSION["requiredContent"] = "";
+            <tr>
+                <td>
+                  <div class='studentInformationText'>
+                  Completed Courses: ";
 
-      } else if($step == 3){
+            $_SESSION["requiredContent"] = "getAlreadyTakenClasses";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContent"] = "";
 
-        echo "
-          <div class='studentInformation'>
+            // Fetching is need to decide for the checked buttons
+            $student -> fetchFromSession();
+            echo "
+                  <br>
+                  <br>
+                  Please select courses ... i am begging you :(
+                  </div>
+                </td>
+            </tr>
 
-          Selected major: ";
+            <tr>
+                <td>
+                  <input type='text' id='search' class='searchBox'onkeyup='showResult(this.value)' placeholder='Search for courses, professors, subjects...'>
+                  <i class='fa fa-search' id='searchButton'></i>
+                </td>
+            </tr>
 
-          $_SESSION["requiredContent"] = "getMajorNameByID";
-          include "./frontend/contentCreatorSession.php";
-          $_SESSION["requiredContent"] = "";
+            <tr>
+                <td>
+                    <table class='constarintsTable'>
+                    <tr>
+                      <td>
 
-        echo "
-          <br>
+                          <input type='checkbox' class='checkbox' id='constraint1' value='9AM' onclick='processCheckboxes1()'
+                          "; if($student -> constraints["9AM"]){echo "checked";} echo "
+                          >
+                          <label for='constraint1' >No 9AM</label>
 
-          Taken Classes: ";
+                          <br>
 
+                          <input type='checkbox' class='checkbox' id='constraint2' value='PE' onclick='processCheckboxes2()'
+                            "; if($student -> constraints["PHYED"]){echo "checked";} echo "
+                          >
+                          <label for='constraint2' >Completed PE</label>
 
-        $_SESSION["requiredContent"] = "getAlreadyTakenClasses";
-        include "./frontend/contentCreatorSession.php";
-        $_SESSION["requiredContent"] = "";
+                          <br>
 
+                          <input type='checkbox' class='checkbox' id='constraint3' value='FYWS' onclick='processCheckboxes3()'
+                          "; if($student -> constraints["FYWS"]){echo "checked";} echo "
+                          >
+                          <label for='constraint3'>Completed FYWS</label>
 
-        echo "
-          </div>
-        ";
+                          <br>
 
+                          <input type='checkbox' class='checkbox' id='constraint4' value='CCOL' onclick='processCheckboxes4()'
+                          "; if($student -> constraints["CCOL"]){echo "checked";} echo "
+                          >
+                          <label for='constraint4' >Completed Colloquium</label>
 
-      }
-    ?>
+                      </td>
 
-    <hr style="height:40pt; visibility:hidden;" />
+                      <td>
 
-    <div id='livesearch'>
-    <?php
-      if($step == 0){
-        $_SESSION["requiredContent"] = "homePageRegularList";
-        include "./frontend/contentCreatorSession.php";
-        $_SESSION["requiredContent"] = "";
-      }
-    ?>
-    </div>
+                          <input type='checkbox' class='checkbox' id='constraint5' value='CDAD' onclick='processCheckboxes5()'
+                          "; if($student -> constraints["CDAD"]){echo "checked";} echo "
+                          >
+                          <label for='constraint5' >Completed CDAD</label>
 
-  </div>
-</body>
+                          <br>
+
+                          <input type='checkbox' class='checkbox' id='constraint6' value='CCEA' onclick='processCheckboxes6()'
+                          "; if($student -> constraints["CCEA"]){echo "checked";} echo "
+                          >
+                          <label for='constraint6' >Completed CCEA</label>
+
+                          <br>
+
+                          <input type='checkbox' class='checkbox' id='constraint7' value='CADT' onclick='processCheckboxes7()'
+                          "; if($student -> constraints["CADT"]){echo "checked";} echo "
+                          >
+                          <label for='constraint7' >Completed CADT</label>
+
+                          <br>
+
+                          <input type='checkbox' class='checkbox' id='constraint8' value='CSTS' onclick='processCheckboxes8()'
+                          "; if($student -> constraints["CSTS"]){echo "checked";} echo "
+                          >
+                          <label for='constraint8' >Completed CSTS</label>
+
+                      </td>
+                    </tr>
+                    </table>
+                    <hr style='height:8px; visibility:hidden;' />
+
+                    <form action='' method='post' role='form'>
+                    <button type='submit' class='submitButton' name='SubmitButton'>
+                      <i>Continue</i>
+                    </button>
+                  </form>
+                </td>
+            </tr>";
+        }
+      ?>
+
+          <tr>
+              <td>
+                <div id='livesearch'>
+                <?php
+                  if ($step == 0) {
+                      $_SESSION["requiredContent"] = "homePageRegularList";
+                      include "./frontend/contentCreatorSession.php";
+                      $_SESSION["requiredContent"] = "";
+                  } elseif ($step == 3) {
+                      $_SESSION["requiredContent"] = "requirementSelectionList";
+                      $_SESSION["requiredContentArgument"] = "filteredAll";
+                      include "./frontend/contentCreatorSession.php";
+                      $_SESSION["requiredContentArgument"] = "";
+                      $_SESSION["requiredContent"] = "";
+                  }
+                ?>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+            <td>
+              <a href="reset.php">Reset</a>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </body>
 
 </html>

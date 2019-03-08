@@ -5,12 +5,13 @@ require_once("./backend/dbConnector.php");
 require_once("./backend/student.php");
 
 $requiredContent = $_SESSION["requiredContent"];
+$requiredContentArgument = $_SESSION["requiredContentArgument"];
 
 if ($requiredContent == "homePageRegularList") {
     $thing = $db->returnAllMajors();
 
     echo "
-          <table class='bottom-table'>
+          <table class='standartTable'>
             <tbody>";
     for ($x = 0; $x < 10; $x++) {
         echo "
@@ -21,21 +22,20 @@ if ($requiredContent == "homePageRegularList") {
     }
     echo "    </tbody>
             </table>";
-} elseif ($requiredContent == "majorSelectionPageList") {
+} else if ($requiredContent == "majorSelectionPageList") {
     $thing = $db->returnAllMajors();
 
     echo "
-        <div class='select-style'>
-          <select name='studentMajorID'>";
+          <select name='studentMajorID' class='dropDownMenu'>";
     for ($x = 0; $x < sizeof($thing); $x++) {
         echo "
-          <option value='".$thing[$x][1]."'>".$thing[$x][0]."</option>
+          <option value='".$thing[$x][1]."' >".$thing[$x][0]."</option>
       ";
     }
     echo "
-          </select>
-        </div>";
-} elseif ($requiredContent == "getMajorNameByID") {
+          </select>";
+
+} else if ($requiredContent == "getMajorNameByID") {
     $thing = $student -> major[0][0];
 
     if (!isset($thing)) {
@@ -43,17 +43,26 @@ if ($requiredContent == "homePageRegularList") {
     } else {
         echo $thing;
     }
-} elseif ($requiredContent == "majorRequirementSelectionList") {
-    $thing = $student-> db -> returnMajorReq($student -> majorID);
+
+} else if ($requiredContent == "requirementSelectionList") {
+    if($requiredContentArgument == "major"){
+      $thing = $student-> db -> returnMajorReq($student -> majorID);
+    } else if($requiredContentArgument == "filteredAll"){
+      $thing = $student -> returnFiltered();
+    }
+
 
     echo "
-					<table class='bottom-table-major-requirement'>
+					<table class='standartLongTable'>
 						<tbody>";
     for ($x = 0; $x < sizeof($thing); $x++) {
         echo "
-						<tr class='clickable-row' id='button".$x."'>
-								<td>".$thing[$x][0]."</td>
-								<td>".$thing[$x][1]."</td>
+						<tr class='clickableTableRow' id='button".$x."'>";
+              if($thing[$x][0]!=""){
+								echo "<td>".$thing[$x][0]."</td>
+                <td>".$thing[$x][1]."</td>";
+              }
+            echo "
 						</tr>
 						";
     }
@@ -86,17 +95,24 @@ if ($requiredContent == "homePageRegularList") {
 							";
     }
     echo "</script>";
-		
-} elseif ($requiredContent == "getAlreadyTakenClasses") {
+
+} else if ($requiredContent == "getAlreadyTakenClasses") {
     $student -> fetchFromSession();
     $thing = $student-> db -> returnCourseName($student -> completedReqs);
 
     if (isset($thing)) {
         for ($x = 0; $x < sizeof($thing); $x++) {
             echo $thing[$x][0];
-            echo ", ";
+
+						// Simply don't put comma on the last one
+						if($x != (sizeof($thing)-1)){
+							echo ", ";
+						}
         }
     } else {
 			echo "None";
 		}
+
 }
+
+?>

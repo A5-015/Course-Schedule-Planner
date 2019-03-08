@@ -1,10 +1,10 @@
 <?php
 
-include "dbConnector.php";
+include "branchDB.php";
 
-$thing = $db->returnMajorName("72");
+$thing = $db->returnCourses(true, "object");
 echo "<pre>";
-print_r($thing[0][0]);
+print_r($thing);
 echo "</pre>";
 
 
