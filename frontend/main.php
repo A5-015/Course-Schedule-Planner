@@ -1,27 +1,33 @@
 <?php
 session_start();
 
-
+include("ChromePhp.php");
 
 if (!isset($_SESSION["step"])) {
     $_SESSION["step"] = 0;
 }
 
+require_once("./backend/student.php");
+$step = $_SESSION["step"];
+if($step >= 2){
+$student -> fetchFromSession();
+}
+
 //check if form was submitted
 if(isset($_POST['SubmitButton'])){
-  $step = $_SESSION["step"];
   $step = $step + 1;
   $_SESSION["step"] = $step;
 
   if($step == 2){
-      require_once("./backend/student.php");
-      $student -> setMajor($_POST['studentMajorID']);
-      //echo $student -> major[0][0];
-      $student -> transfer();
+      $post = array(array($_POST['studentMajorID']));
+      $student -> setMajor($post[0][0]);
+      $student -> pushToSession();
   }
 }
 
 if(isset($_POST['jumpToStep3'])){
+  $student -> setMajor(" ");
+  $student -> pushToSession();
   $_SESSION["step"] = 3;
 }
 
@@ -107,7 +113,7 @@ $(document).ready(function() {
   <div class="search-wrap">
     <?php
 
-      if(($step == 0)||($step == 1)||($step == 2)){
+      if(($step == 0)||($step == 1)||($step == 2)||($step == 3)){
         echo "
         <object class='logo' type='image/svg+xml' data='./frontend/static/images/logo.svg'>
           Your browser does not support SVG
@@ -166,13 +172,43 @@ $(document).ready(function() {
         ";
 
         echo "
+          <form action='' method='post' role='form'>
           <button type='submit' class='scheduleMakerButton' name='SubmitButton'>
             <i>Continue</i>
-          </button>";
+          </button>
+          </form>
+          ";
 
         $_SESSION["requiredContent"] = "majorRequirementSelectionList";
         include "./frontend/contentCreatorSession.php";
         $_SESSION["requiredContent"] = "";
+
+      } else if($step == 3){
+
+        echo "
+          <div class='studentInformation'>
+
+          Selected major: ";
+
+          $_SESSION["requiredContent"] = "getMajorNameByID";
+          include "./frontend/contentCreatorSession.php";
+          $_SESSION["requiredContent"] = "";
+
+        echo "
+          <br>
+
+          Taken Classes: ";
+
+
+        $_SESSION["requiredContent"] = "getAlreadyTakenClasses";
+        include "./frontend/contentCreatorSession.php";
+        $_SESSION["requiredContent"] = "";
+
+
+        echo "
+          </div>
+        ";
+
 
       }
     ?>

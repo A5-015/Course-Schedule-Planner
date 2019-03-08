@@ -28,32 +28,39 @@
 
 class Database
 {
+    // holds important database connection information
     private static $db_host = "localhost";
     private static $db_user = "bsimsekc_nishant";
     private static $db_pass = "reppepreppep";
     private static $db_name = "bsimsekc_test";
 
+    // defines the variable which will eventually be defined
     public $connection;
 
+    //constructor
     public function __construct()
     {
+        //assigns the db_connect function to connection so that it can be called anywhere
         $this->connection = $this->db_connect();
     }
 
     public function db_connect()
     {
+        //calls the mysqli_connect and passes all the relevant connection information
         $connection = mysqli_connect(self::$db_host, self::$db_user, self::$db_pass, self::$db_name) or die("Error " . mysqli_error($connection));
         return $connection;
     }
 
     public function arrayify($list)
     {
+        //cleans up how the results from database queries are presented
         while ($row = mysqli_fetch_array($list, MYSQLI_NUM)) {
             $array[] = $row;
         }
         return $array;
     }
 
+    //function that converts a 2d array into a simple, 1D array
     public function fixArray($size, $array)
     {
         $i=0;
@@ -66,6 +73,21 @@ class Database
 
         return $array;
     }
+
+    public function querySet($passedQuery, $passedArray)
+    {
+      $returnArray = [];
+      $x =0;
+      while ($x < sizeof(passedArray)){
+        $list = $this->connection->query($passedQuery);
+        $result = arrayify($list);
+        array_push($returnArray, $result);
+        $x++;
+      }
+
+      return $returnArray;
+    }
+
 
     public function returnAllMajors()
     {
@@ -85,6 +107,7 @@ class Database
 
         return $majorName;
     }
+
 
     public function returnMajorID($major)
     {
@@ -184,6 +207,23 @@ class Database
 
 
         return $courseArray;
+    }
+
+    public function returnCourseName($peoplesoftIDArray)
+    {
+      $peoplesoftIDArraySize = sizeof($peoplesoftIDArray);
+
+      $x=0;
+      while ($x < $peoplesoftIDArraySize){
+        $courseQuery = "SELECT title FROM course WHERE peoplesoftID = '$peoplesoftIDArray[$x]'";
+        $courseResult = $this->connection->query($courseQuery);
+        $course = mysqli_fetch_row($courseResult);
+        $courseArray[]= $course;
+        $x++;
+      }
+
+      return $courseArray;
+
     }
 
 

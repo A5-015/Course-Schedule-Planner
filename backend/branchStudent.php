@@ -13,15 +13,6 @@ class Student
     public $major=[];
     public $majorID=[];
     public $completedReqs=[];
-    public $constraints=[
-      "9AM"   => FALSE,
-      "PE"    => FALSE,
-      "CCOL"  => FALSE,
-      "CCAD"  => FALSE,
-      "CCEA"  => FALSE,
-      "CDAT"  => FALSE,
-      "FYWS"  => FALSE,
-    ];
 
     public function __construct()
     {
@@ -48,17 +39,12 @@ class Student
         //     $this->completedReqs[] = $peoplesoftID;
         // }
 
-        $reqSearch = array_search($peoplesoftID, $this->completedReqs, true);
-        if ($reqSearch === false) {
-            $this->completedReqs[] = $peoplesoftID;
-
-
-            // $temp = [$courseName, $peoplesoftID];
-            // $this->completedReqs[]= $temp;
-
-        } else {
-            unset($this->completedReqs[$reqSearch]);
-            $this->completedReqs = array_values($this->completedReqs);
+        $reqSearch = array_search($peoplesoftID, $this->completedReqs);
+        if ($reqSearch == false){
+          $this->completedReqs[] = $peoplesoftID;
+        }
+        else {
+          unset($this->completedReqs[$reqSearch]);
         }
     }
 
@@ -79,8 +65,6 @@ class Student
         // echo $this->major[0][0];
     // echo $this->majorID;
     }
-
-    
 }
 
 $student = new Student();

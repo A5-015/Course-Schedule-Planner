@@ -36,6 +36,24 @@ body
   color: #57068c;
 }
 
+.searchTerm2 {
+    position: absolute;
+  float: left;
+  top: 270px;
+  width: 500px;
+  border: 3px solid #57068c;
+  padding: 10px;
+  height: 20px;
+  border-radius: 25px;
+  outline: none;
+  color: black;
+  font-size: 13pt;
+}
+
+.searchTerm2:focus{
+  color: #57068c;
+}
+
 #searchButton {
   position: absolute;
   right: -25px;
@@ -97,6 +115,17 @@ body
 
 .bottom-table-major-requirement{
   top: 130px;
+  position: relative;
+  float: center;
+  text-align: center;
+  width: 526px;
+  border: none;
+  border-collapse: collapse;
+  font-size: 13pt;
+}
+
+.bottom-table-major-requirement2{
+  top: 10px;
   position: relative;
   float: center;
   text-align: center;

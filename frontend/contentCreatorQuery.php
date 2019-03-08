@@ -1,7 +1,13 @@
 <?php
+session_start();
+
+include("ChromePhp.php");
 
 //Including Database configuration file.
-include "../backend/dbConnector.php";
+require_once("../backend/dbConnector.php");
+require_once("../backend/student.php");
+
+
 
 if (isset($_POST['search'])) {
 
@@ -23,5 +29,18 @@ if (isset($_POST['search'])) {
               </table>";
    }
 
+} else if (isset($_POST['peopleSoftID'])) {
+
+    //ChromePhp::log($_POST['peopleSoftID']);
+
+    $query = $_POST['peopleSoftID'];
+    //$query2 = $_POST['courseName'];
+
+    $student -> fetchFromSession();
+    $student -> shareMajorReqs($query);
+    $student -> pushToSession();
+
 }
-?>
+
+
+          ?>
