@@ -47,18 +47,6 @@ class Student
 
     public function shareMajorReqs($peoplesoftID)
     {
-        // $x=0;
-        // $idExists = false;
-        // while ($x<sizeof($this->completedReqs)) {
-        //     if ($this->completedReqs[$x] == $peoplesoftID) {
-        //         $idExists = true;
-        //     }
-        //     $x++;
-        // }
-        // if ($idExists == false) {
-        //     $this->completedReqs[] = $peoplesoftID;
-        // }
-
         $reqSearch = array_search($peoplesoftID, $this->completedReqs, true);
         if ($reqSearch === false) {
             $this->completedReqs[] = $peoplesoftID;
@@ -72,25 +60,26 @@ class Student
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
     public function shareSelectedCourses($peoplesoftID)
     {
-
-        $reqSearch = array_search($peoplesoftID, $this->completedReqs, true);
-
-        if ($reqSearch === false) {
-            $student -> selectedCourses[] = $student -> db -> returnCourseTime($peoplesoftID);
-
-        } else {
-            unset($this->completedReqs[$reqSearch]);
-            $this->selectedCourses = array_values($this->completedReqs);
+        $simplifiedSelected = $this->returnSelectedCourses();
+        $i=0;
+        while ($i<sizeof($simplifiedSelected)) {
+            $selectedPeopleSoft[$i] = $simplifiedSelected[$i][1];
+            $i++;
         }
+
+        $selectedSearch = array_search($peoplesoftID, $selectedPeopleSoft, true);
+        if ($selectedSearch === false) {
+            $this->selectedCourses[]= $this->db->returnCourseTime($peoplesoftID);
+        }
+
+        else {
+          unset($this->selectedCourses[$selectedSearch]);
+          $this->selectedCourses = array_values($this->selectedCourses);
+        }
+
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function filterByTitle($allCourses, $title)
     {
@@ -155,14 +144,10 @@ class Student
         $allCourses = $this->filterByTitle($allCourses, "PHYED");
 
         if ($instruction == "newselection") {
-          $trial = $this->returnSelectedCourses();
-          for($x = 0; $x < sizeof($trial); $x++){
-
-            //$allCourses = $this->filterRequirements($allCourses, $this->selectedCourses);
-            $allCourses = $this->filterRequirements($allCourses, $trial[$x]);
-
-          }
-
+            $trial = $this->returnSelectedCourses();
+            for ($x = 0; $x < sizeof($trial); $x++) {
+                $allCourses = $this->filterRequirements($allCourses, $trial[$x]);
+            }
         }
 
 
@@ -170,11 +155,6 @@ class Student
             $coursesWithTime = $this->db->returnCoursesWithTime("09:00");
             $allCourses = $this->compareArrayMulti($allCourses, $coursesWithTime);
         };
-
-
-
-
-
 
 
         return $allCourses;
