@@ -2,27 +2,12 @@
 
 include "branchStudent.php";
 
-// $setMajor = $student->setMajor("72");ENGR-UH 2013
-// echo "<pre>";
-// print_r($student->major);
-// echo "</pre>";
-//
-// $setMajorreq = $student->shareMajorReqs("panos");
-
-$student->constraints["CDAD"] = true;
-$student->constraints["CSTS"] = true;
-$student->constraints["CCOL"] = true;
-$student->constraints["PHYED"] = true;
-
-
+$student->selectedCourses[] = $student->db->returnCourseTime("ACS-UH 1010X");
+$student->selectedCourses[] = $student->db->returnCourseTime("THEAT-UH 1512");
+$student->selectedCourses[] = $student->db->returnCourseTime("ACS-UH 2613X");
+$student->selectedCourses[] = $student->db->returnCourseTime("ARABL-UH 1110");
 
 echo "<pre>";
-//var_dump($student->constraints["CDAD"] =="1");
-echo "<br>";
-print_r($student->returnFiltered());
-
+print_r($student->returnSelectedCourses());
 echo "</pre>";
-
-
-
 ?>

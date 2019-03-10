@@ -2,7 +2,7 @@
 
 include "branchDB.php";
 
-$thing = $db->returnCourses(true, "object");
+$thing = $db->returnSelectedCourses();
 echo "<pre>";
 print_r($thing);
 echo "</pre>";

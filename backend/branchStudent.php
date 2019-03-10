@@ -2,6 +2,36 @@
 require_once "dbConnector.php";
 //completedReqs needs to be in [0][0]
 
+/*
+// Times are in 24 hour format
+$startTimeHour = 9;
+$startTimeMinute = 0;
+$endTimeHour = 10;
+$endTimeMinute = 0;
+
+$title = "Anthropology and the Arab World";
+$description = "ADADSA";
+
+// Days ofset from Sunday
+$dayOfTheWeek = 0;
+*/
+
+
+/*
+
+// creat it if it doesn't exist
+if(!isset($_SESSION["selectedCourses"])){
+  $_SESSION["selectedCourses"] = [];
+}
+
+$thing = $student -> db -> returnCourseTime($query);
+
+$session = $_SESSION["selectedCourses"];
+$session[] = $thing;
+$_SESSION["selectedCourses"] = $session;
+
+
+*/
 
 class Student
 {
@@ -9,15 +39,17 @@ class Student
     public $majorID=[];
     public $completedReqs=[];
     public $constraints=[
-      "9AM"   => false,
-      "PHYED"    => false,
-      "CCOL"  => false,
-      "CDAD"  => false,
-      "CCEA"  => false,
-      "CADT"  => false,
-      "CSTS"  => false,
-      "FYWS"  => false,
+      "9AM"   => 0,
+      "PE"    => 0,
+      "CCOL"  => 0,
+      "CDAD"  => 0,
+      "CCEA"  => 0,
+      "CADT"  => 0,
+      "CSTS"  => 0,
+      "FYWS"  => 0,
     ];
+
+    public $selectedCourses=[];
 
     public function __construct()
     {
@@ -72,8 +104,8 @@ class Student
 
             $i=0;
             while ($i < sizeof($offsetArray)) {
-              unset($allCourses[$offsetArray[$i]]);
-              $i++;
+                unset($allCourses[$offsetArray[$i]]);
+                $i++;
             }
         }
 
@@ -93,10 +125,23 @@ class Student
         return $allCourses;
     }
 
+
+    public function compareArrayMulti($arraya, $arrayb)
+    {
+        foreach ($arraya as $keya => $valuea) {
+            if (in_array($valuea, $arrayb)) {
+                unset($arraya[$keya]);
+            }
+        }
+        return $arraya;
+    }
+
+
+
     public function returnFiltered()
     {
         $allCourses = $this->db->returnCourses(true, "null");
-        $removedReqs = $this->filterRequirements($allCourses, $this->completedReqs);
+        $allCourses = $this->filterRequirements($allCourses, $this->completedReqs);
 
         $allCourses = $this->filterByTitle($allCourses, "CDAD");
         $allCourses = $this->filterByTitle($allCourses, "CCEA");
@@ -106,10 +151,27 @@ class Student
         $allCourses = $this->filterByTitle($allCourses, "CCOL");
         $allCourses = $this->filterByTitle($allCourses, "PHYED");
 
+        if ($this->constraints["9AM"]==TRUE) {
+            $coursesWithTime = $this->db->returnCoursesWithTime("09:00");
+            $allCourses = $this->compareArrayMulti($allCourses, $coursesWithTime);
+        };
+
+
 
 
 
         return $allCourses;
+    }
+
+    public function returnSelectedCourses(){
+      $returnedCourses = [];
+      $i=0;
+      while ($i<sizeof($this->selectedCourses)){
+        $returnedCourses[$i][0] = $this->selectedCourses[$i][0]["title"];
+        $returnedCourses[$i][1] = $this->selectedCourses[$i][0]["peopleSoftID"];
+        $i++;
+      }
+      return $returnedCourses;
     }
 
 
@@ -119,6 +181,7 @@ class Student
         $_SESSION['major']=$this->major;
         $_SESSION['completedReqs']=$this->completedReqs;
         $_SESSION['constraints'] = $this->constraints;
+        $_SESSION['selectedCourses'] = $this->selectedCourses;
     }
 
     public function fetchFromSession()
@@ -128,6 +191,7 @@ class Student
         $this->major=$_SESSION['major'];
         $this->completedReqs=$_SESSION['completedReqs'];
         $this->constraints=$_SESSION['constraints'];
+        $this->selectedCourses=$_SESSION['selectedCourses'];
     }
 }
 

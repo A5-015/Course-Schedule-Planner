@@ -1,26 +1,39 @@
 <?php
 session_start();
 
-include("ChromePhp.php");
-
+// Create wizard steps if not initiated
 if (!isset($_SESSION["step"])) {
     $_SESSION["step"] = 0;
+    $_SESSION["refresh"] = 0;
+
 }
 
+// Include student class
 require_once("./backend/student.php");
+
+// Get the current wizard step from session
 $step = $_SESSION["step"];
+
 if ($step >= 2) {
+    // Transfer data stored in the session back to the student class
     $student -> fetchFromSession();
 }
 
-//check if form was submitted
+// Check if continue button was submitted
 if (isset($_POST['SubmitButton'])) {
+
+    // If button is pressed, increment the wizard step by 1
     $step = $step + 1;
     $_SESSION["step"] = $step;
 
+    // Enable page refreshing for clearing previously submitted form data
+    $_SESSION["refresh"] = 1;
+
+    // If the current step is 2, send major information to student class
     if ($step == 2) {
-        $post = array(array($_POST['studentMajorID']));
-        $student -> setMajor($post[0][0]);
+        $student -> setMajor($_POST['studentMajorID']);
+
+        // Save class data in the session
         $student -> pushToSession();
     }
 }
@@ -29,10 +42,7 @@ if (isset($_POST['jumpToStep3'])) {
     $student -> setMajor(" ");
     $student -> pushToSession();
     $_SESSION["step"] = 3;
-}
 
-if (isset($_POST['studentMajor'])) {
-    //echo $_POST['studentMajor'];
 }
 
 $step = $_SESSION["step"];
@@ -48,88 +58,37 @@ $_SESSION["requiredContent"] = "";
 <head>
   <title>Class Scheduler | nyuad.app</title>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="./frontend/static/css/main.css">
+  <?php
+  if ($_SESSION["refresh"] == 1) {
+      $_SESSION["refresh"] = 0;
+
+      echo "
+      <script>
+          window.location = window.location.href;
+      </script>
+      ";
+  }
+
+   ?>
+  <link rel="stylesheet" type="text/css" href="./frontend/static/css/main.css" media="all">
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://use.fontawesome.com/21797530af.js"></script>
-  <script>
 
-  //Getting value from "ajax.php".
-function fill(Value) {
-   //Assigning value to "search" div in "search.php" file.
-   $('#search').val(Value);
-   //Hiding "display" div in "search.php" file.
-   $('#display').hide();
-}
-
-function delay(callback, ms) {
-  var timer = 0;
-  return function() {
-    var context = this, args = arguments;
-    clearTimeout(timer);
-    timer = setTimeout(function () {
-      callback.apply(context, args);
-    }, ms || 0);
-  };
-}
-
-$(document).ready(function() {
-   //On pressing a key on "Search box" in "search.php" file. This function will be called.
-   $('#search').keyup(delay(function (e) {
-       //Assigning search box value to javascript variable named as "name".
-       var name = $('#search').val();
-       //Validating, if "name" is empty.
-       if (name == "") {
-           //Assigning empty value to "display" div in "search.php" file.
-           $("#livesearch").html("");
-       }
-       //If name is not empty.
-       else {
-           //AJAX is called.
-           $.ajax({
-               //AJAX type is "Post".
-               type: "POST",
-               //Data will be sent to "ajax.php".
-               url: "./frontend/contentCreatorQuery.php",
-               //Data, that will be sent to "ajax.php".
-               data: {
-                   //Assigning value of "name" into "search" variable.
-                   search: name
-               },
-               //If result found, this funtion will be called.
-               success: function(html) {
-                   //Assigning result to "display" div in "search.php" file.
-                   $("#livesearch").html(html).show();
-               }
-           });
-       }
-   }, 300));
-});
-
-</script>
-
-<script>
-<?php
-for($x = 1; $x < 9; $x++){
-  echo "
-  function processCheckboxes".$x."() {
-    $.ajax( {
-        type: 'POST',
-        url: './frontend/contentCreatorQuery.php',
-        data: {constraintID: ".$x."}
-    } );
-  }
-  ";
-}
-?>
-</script>
-
+  <script src="./frontend/static/js/searchBar.js"></script>
+  <script src="./frontend/static/js/checkBoxes.js"></script>
+  <script src="./frontend/static/js/rows.js"></script>
+  <script src="./frontend/static/js/pageScrollFix.js"></script>
 </head>
 
 <body>
+  <table class="skelethon">
+    <tr>
+      <td>
     <table class="skelethon">
       <tbody>
       <?php
-        if (($step == 0)||($step == 1)||($step == 2)||($step == 3)) {
+        if (($step == 0)||($step == 1)||($step == 2)||($step == 3)||($step == 4)) {
             echo "
             <tr>
                 <td>
@@ -143,7 +102,7 @@ for($x = 1; $x < 9; $x++){
             <tr>
                 <td>
                   <input type='text' id='search' class='searchBox'onkeyup='showResult(this.value)' placeholder='Search for courses, professors, subjects...'>
-                  <i class='fa fa-search' id='searchButton'></i>
+                  <!--<i class='fa fa-search' id='searchButton'></i>-->
                 </td>
             </tr>
 
@@ -151,7 +110,7 @@ for($x = 1; $x < 9; $x++){
                 <td>
                   <form action='' method='post' role='form'>
                     <button type='submit' class='submitButton' name='SubmitButton'>
-                      <i>Make your course schedule</i>
+                      <i>Make your course schedule using the wizard</i>
                     </button>
                   </form>
                 </td>
@@ -192,14 +151,14 @@ for($x = 1; $x < 9; $x++){
                 <td>
                     <div class='studentInformationText'>
 
-                      Selected major: ";
+                      Selected Major: ";
 
             $_SESSION["requiredContent"] = "getMajorNameByID";
             include "./frontend/contentCreatorSession.php";
             $_SESSION["requiredContent"] = "";
 
             echo "
-                      <br> Please select courses that you have already completed
+                      <br> Please select courses that you have already completed from your major requirements
                     </div>
                 </td>
             </tr>";
@@ -257,15 +216,15 @@ for($x = 1; $x < 9; $x++){
             echo "
                   <br>
                   <br>
-                  Please select courses ... i am begging you :(
+                  Please select courses that you have already completed
                   </div>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                  <input type='text' id='search' class='searchBox'onkeyup='showResult(this.value)' placeholder='Search for courses, professors, subjects...'>
-                  <i class='fa fa-search' id='searchButton'></i>
+                  <input type='text' id='search2' class='searchBox' onkeyup='showResult(this.value)' placeholder='Search for courses, professors, subjects...'>
+                  <!--<i class='fa fa-search' id='searchButton'></i>-->
                 </td>
             </tr>
 
@@ -275,29 +234,45 @@ for($x = 1; $x < 9; $x++){
                     <tr>
                       <td>
 
-                          <input type='checkbox' class='checkbox' id='constraint1' value='9AM' onclick='processCheckboxes1()'
-                          "; if($student -> constraints["9AM"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint1' value='9AM' onclick='processCheckboxes(1)'
+                          ";
+            if ($student -> constraints["9AM"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint1' >No 9AM</label>
 
                           <br>
 
-                          <input type='checkbox' class='checkbox' id='constraint2' value='PE' onclick='processCheckboxes2()'
-                            "; if($student -> constraints["PHYED"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint2' value='PE' onclick='processCheckboxes(2)'
+                            ";
+            if ($student -> constraints["PHYED"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint2' >Completed PE</label>
 
                           <br>
 
-                          <input type='checkbox' class='checkbox' id='constraint3' value='FYWS' onclick='processCheckboxes3()'
-                          "; if($student -> constraints["FYWS"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint3' value='FYWS' onclick='processCheckboxes(3)'
+                          ";
+            if ($student -> constraints["FYWS"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint3'>Completed FYWS</label>
 
                           <br>
 
-                          <input type='checkbox' class='checkbox' id='constraint4' value='CCOL' onclick='processCheckboxes4()'
-                          "; if($student -> constraints["CCOL"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint4' value='CCOL' onclick='processCheckboxes(4)'
+                          ";
+            if ($student -> constraints["CCOL"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint4' >Completed Colloquium</label>
 
@@ -305,29 +280,45 @@ for($x = 1; $x < 9; $x++){
 
                       <td>
 
-                          <input type='checkbox' class='checkbox' id='constraint5' value='CDAD' onclick='processCheckboxes5()'
-                          "; if($student -> constraints["CDAD"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint5' value='CDAD' onclick='processCheckboxes(5)'
+                          ";
+            if ($student -> constraints["CDAD"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint5' >Completed CDAD</label>
 
                           <br>
 
-                          <input type='checkbox' class='checkbox' id='constraint6' value='CCEA' onclick='processCheckboxes6()'
-                          "; if($student -> constraints["CCEA"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint6' value='CCEA' onclick='processCheckboxes(6)'
+                          ";
+            if ($student -> constraints["CCEA"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint6' >Completed CCEA</label>
 
                           <br>
 
-                          <input type='checkbox' class='checkbox' id='constraint7' value='CADT' onclick='processCheckboxes7()'
-                          "; if($student -> constraints["CADT"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint7' value='CADT' onclick='processCheckboxes(7)'
+                          ";
+            if ($student -> constraints["CADT"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint7' >Completed CADT</label>
 
                           <br>
 
-                          <input type='checkbox' class='checkbox' id='constraint8' value='CSTS' onclick='processCheckboxes8()'
-                          "; if($student -> constraints["CSTS"]){echo "checked";} echo "
+                          <input type='checkbox' class='checkbox' id='constraint8' value='CSTS' onclick='processCheckboxes(8)'
+                          ";
+            if ($student -> constraints["CSTS"]) {
+                echo "checked";
+            }
+            echo "
                           >
                           <label for='constraint8' >Completed CSTS</label>
 
@@ -343,6 +334,78 @@ for($x = 1; $x < 9; $x++){
                   </form>
                 </td>
             </tr>";
+        } elseif ($step == 4) {
+            echo "
+          <tr>
+              <td>
+                <div class='studentInformationText'>
+                  Selected Major: ";
+
+            $_SESSION["requiredContent"] = "getMajorNameByID";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContent"] = "";
+
+            echo "
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+              <td>
+                <div class='studentInformationText'>
+                Completed Courses: ";
+
+            $_SESSION["requiredContent"] = "getAlreadyTakenClasses";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContent"] = "";
+
+            echo "
+                <br>
+                </div>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                <div class='studentInformationText'>
+                Selected Courses: ";
+
+            $_SESSION["requiredContent"] = "getSelectedClasses";
+            include "./frontend/contentCreatorSession.php";
+            $_SESSION["requiredContent"] = "";
+
+            echo "
+                <br>
+                <br>
+                Please select courses you want to take
+                </div>
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                <input type='text' id='search2' class='searchBox'onkeyup='showResult(this.value)' placeholder='Search for courses, professors, subjects...'>
+                <!--<i class='fa fa-search' id='searchButton'></i>-->
+              </td>
+          </tr>
+
+          <tr>
+              <td>
+                  <form action='' method='post' role='form'>
+                  <button type='submit' class='submitButton' name='SubmitButton'>
+                    <i>Print Your Schedule</i>
+                  </button>
+                </form>
+              </td>
+          </tr>";
+        } else if ($step == 5) {
+          echo "
+            <tr>
+              <td class='lastPageText'>
+                  <a href='#' onclick='window.print()' >Click to print this page</a> or <a href='reset.php'>create another schedule</a>
+              </td>
+          </tr>";
+          echo "<iframe src='./frontend/calendarCreator.php' class='iframeFinalPage' frameBorder='0' scrolling='no'>";
         }
       ?>
 
@@ -360,20 +423,53 @@ for($x = 1; $x < 9; $x++){
                       include "./frontend/contentCreatorSession.php";
                       $_SESSION["requiredContentArgument"] = "";
                       $_SESSION["requiredContent"] = "";
+                  } elseif ($step == 4) {
+                      $_SESSION["requiredContent"] = "requirementSelectionList";
+                      $_SESSION["requiredContentArgument"] = "filteredAllForNewSelection";
+                      include "./frontend/contentCreatorSession.php";
+                      $_SESSION["requiredContentArgument"] = "";
+                      $_SESSION["requiredContent"] = "";
                   }
                 ?>
             </div>
           </td>
         </tr>
-
-        <tr>
+        <?php
+        if($step != 0){
+          echo "
+           <tr>
             <td>
-              <a href="reset.php">Reset</a>
-          </td>
-        </tr>
+              <a href='reset.php'>Reset</a>
+            </td>
+          </tr>
+          ";
+        }
 
+        ?>
       </tbody>
     </table>
+  </td>
+
+
+    <?php
+    if ($step == 4) {
+      $char = '"';
+        echo "
+      <td>
+      <table>
+      <tr>
+          <td>
+          <iframe  width='600px' src='./frontend/calendarCreator.php' class='iframe' frameBorder='0' scrolling='no'>
+          </td>
+      </tr>
+      </table>
+  </td>
+      ";
+    }
+    ?>
+
+</tr>
+</table>
   </body>
 
 </html>

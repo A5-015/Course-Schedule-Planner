@@ -74,6 +74,18 @@ class Database
         return $array;
     }
 
+    public function make1D($array)
+    {
+        $i=0;
+        while ($i < sizeof($array[0])) {
+            $temp[$i] = $array[0][$i];
+            $i++;
+        }
+        $oneDArray = $temp;
+
+        return $oneDArray;
+    }
+
 
 
 
@@ -339,6 +351,23 @@ class Database
         return $courseArray;
     }
 
+    public function returnCoursesWithTime($time)
+    {
+        $timeQuery = "SELECT DISTINCT title, peoplesoftID FROM section
+                          INNER JOIN meeting
+                          ON meeting.FK_section = section.PK_section
+                          INNER JOIN course
+                          ON section.FK_course = course.PK_course
+                          WHERE term LIKE '%2019%'
+                          AND term LIKE '%Spring%'
+                          AND times LIKE '%$time%'";
+
+
+        $courseTitleList = $this->connection->query($timeQuery);
+        $coursesWithoutTime = $this->arrayify($courseTitleList);
+
+        return $coursesWithoutTime;
+    }
 
 
     public function returnCourseName($peoplesoftIDArray)
@@ -357,6 +386,140 @@ class Database
         return $courseArray;
     }
 
+    public function regex($regex)
+    {
+    }
+
+    public function convertDayToInt($array)
+    {
+        $i=0;
+        while ($i<sizeof($array)) {
+            $array[$i] = preg_replace('/U/', 0, $array[$i]);
+            $array[$i] = preg_replace('/M/', 1, $array[$i]);
+            $array[$i] = preg_replace('/T/', 2, $array[$i]);
+            $array[$i] = preg_replace('/W/', 3, $array[$i]);
+            $array[$i] = preg_replace('/R/', 4, $array[$i]);
+            $i++;
+        }
+
+        return $array;
+    }
+
+    public function returnCourseTime($peoplesoftID)
+    {
+        //query
+        $timeQuery = "SELECT days, times, title, peoplesoftID, description FROM meeting
+                        INNER JOIN section
+                        ON meeting.FK_section=section.PK_section
+                        INNER JOIN course
+                        ON section.FK_course=course.PK_course
+                        WHERE section.term LIKE '%Spring%'
+                        AND section.term LIKE '%2019%'
+                        AND course.peoplesoftID = '$peoplesoftID'";
+
+
+        $timeInfoList = $this->connection->query($timeQuery);
+        $timeInfoArray = $this->arrayify($timeInfoList);
+        $timeInfoArray =  $this->make1D($timeInfoArray);
+
+        //if there exists a colon, save what's BEFORE it into $beforeSemiColon
+        //and what's AFTER it into $afterSemiColon
+
+        $primaryTimes = [];
+        $secondaryTimes = [];
+
+
+        preg_match_all('/[A-Z]/', $timeInfoArray[0], $matches);
+        $days = $this->make1D($matches);
+        $days = $this->convertDayToInt($days);
+        $i = 0;
+        while ($i < sizeof($days)) {
+            $primaryTimes["days"][$i] = $days[$i];
+            $i++;
+        }
+
+        if (preg_match_all('/;/', $timeInfoArray[1])) {
+            preg_match_all('/[^;]*/', $timeInfoArray[1], $matches);
+            $matches = $this->make1D($matches);
+            $beforeSemiColon = $matches[0];
+            $afterSemiColon = $matches[2];
+        } else {
+            $beforeSemiColon=$timeInfoArray[1];
+            $afterSemiColon=null;
+        }
+
+        preg_match_all('/\d\d(?=:)/', $beforeSemiColon, $matches);
+        $matches = $this->make1D($matches);
+        $i = 0;
+        while ($i < sizeof($days)) {
+            $primaryTimes["startHour"][$i] = $matches[0];
+            $primaryTimes["endHour"][$i] = $matches[1];
+            $i++;
+        }
+
+        preg_match_all('/\d\d(?!:)/', $beforeSemiColon, $matches);
+        $matches = $this->make1D($matches);
+        $i = 0;
+        while ($i < sizeof($days)) {
+            $primaryTimes["startMinute"][$i] = $matches[0];
+            $primaryTimes["endMinute"][$i] = $matches[1];
+            $i++;
+        }
+
+
+        //secondarytimes
+
+        if ($afterSemiColon!=null) {
+            preg_match_all('/[A-Z]/', $afterSemiColon, $matches);
+            $days = $this->make1D($matches);
+            $days = $this->convertDayToInt($days);
+            $i = 0;
+            while ($i < sizeof($days)) {
+                $secondaryTimes["days"][$i] = $days[$i];
+                $i++;
+            }
+
+            preg_match_all('/\d\d(?=:)/', $afterSemiColon, $matches);
+            $matches = $this->make1D($matches);
+            $i = 0;
+            while ($i < sizeof($days)) {
+                $secondaryTimes["startHour"][$i] = $matches[0];
+                $secondaryTimes["endHour"][$i] = $matches[1];
+                $i++;
+            }
+
+            preg_match_all('/\d\d(?!:)/', $afterSemiColon, $matches);
+            $matches = $this->make1D($matches);
+            $i = 0;
+            while ($i < sizeof($days)) {
+                $secondaryTimes["startMinute"][$i] = $matches[0];
+                $secondaryTimes["endMinute"][$i] = $matches[1];
+                $i++;
+            }
+        }
+
+        $mergedTimes = array_merge_recursive($primaryTimes, $secondaryTimes);
+
+        $eventArray = [];
+
+        $i=0;
+        while ($i<sizeof($mergedTimes["days"])) {
+            $event = ["title"        => $timeInfoArray[2],
+                    "peopleSoftID" => $timeInfoArray[3],
+                    "description"  => $timeInfoArray[4],
+                    "day"          => $mergedTimes["days"][$i],
+                    "startHour"    => $mergedTimes["startHour"][$i],
+                    "startMinute"  => $mergedTimes["startMinute"][$i],
+                    "endHour"      => $mergedTimes["endHour"][$i],
+                    "endMinute"    => $mergedTimes["endMinute"][$i]
+                    ];
+            $eventArray[] = $event;
+            $i++;
+        }
+
+
+        return $eventArray;
+    }
 
     public function __destruct()
     {

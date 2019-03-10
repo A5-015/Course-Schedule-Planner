@@ -74,6 +74,26 @@ class Database
         return $array;
     }
 
+    public function make1D($array)
+    {
+        $i=0;
+        while ($i < sizeof($array[0])) {
+            $temp[$i] = $array[0][$i];
+            $i++;
+        }
+        $oneDArray = $temp;
+
+        return $oneDArray;
+    }
+
+
+
+
+
+
+
+
+
     // public function querySet($passedQuery, $passedArray, $returnArray)
     // {
     //     $x =0;
@@ -208,6 +228,62 @@ class Database
     //     return $courseArray;
     // }
 
+    // public function returnCourses($keyword)
+    // {
+    //     //instantate the FINAL array as an array
+    //     $courseArray = [];
+    //
+    //     //compact query for KEYWORD, current SEMESTER, current YEAR
+    //     $keywordQuery = "SELECT DISTINCT title, peoplesoftID
+    //                    FROM course INNER JOIN section
+    //                       ON course.PK_course = section.FK_course
+    //                    WHERE course.title LIKE '%$keyword%'
+    //                    AND section.term LIKE '%Spring%'
+    //                    AND section.term LIKE '%2019%'";
+    //
+    //     //connection and array making code
+    //     $courseTitleList = $this->connection->query($keywordQuery);
+    //     $courseResultArray = $this->arrayify($courseTitleList);
+    //
+    //     //adds resulting array to final array iteratively
+    //     $i=0;
+    //     while ($i < sizeof($courseResultArray)) {
+    //         array_push($courseArray, $courseResultArray[$i]);
+    //         $i++;
+    //     }
+    //
+    //     $professorQuery = "SELECT DISTINCT section.FK_course
+    //                      FROM professor
+    //                       INNER JOIN meeting
+    //                      		ON professor.FK_meeting = meeting.PK_meeting
+    //                       INNER JOIN section
+    //                       	ON meeting.FK_section = section.PK_section
+    //                       WHERE professor.professor LIKE '%$keyword%'";
+    //
+    //     $professorList = $this->connection->query($professorQuery);
+    //     $professorResultArray = $this->arrayify($professorList);
+    //     $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
+    //
+    //
+    //     $j=0;
+    //     while ($j < sizeof($professorResultArray)) {
+    //         $professorQuery = "SELECT DISTINCT title, peoplesoftID
+    //                        FROM course
+    //                        WHERE PK_course = '$professorResultArray[$j]'";
+    //
+    //         $professorList = $this->connection->query($professorQuery);
+    //         $professorResult[] = mysqli_fetch_row($professorList);
+    //         array_push($courseArray, $professorResult[$j]);
+    //         $j++;
+    //     }
+    //
+    //     return $courseArray;
+    // }
+    //
+    // public function returnAllCourses(){
+    //
+    // }
+
     public function returnCourses(bool $returnAll, $keyword)
     {
         //instantate the FINAL array as an array
@@ -219,24 +295,23 @@ class Database
                           ON course.PK_course = section.FK_course
                        WHERE section.term LIKE '%Spring%'
                        AND section.term LIKE '%2019%'";
-                       //AND course.title LIKE '%$keyword%';
+        //AND course.title LIKE '%$keyword%';
 
-        if ($returnAll == FALSE){
+        if ($returnAll == false) {
+            $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%'";
 
-          $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%'";
+            //connection and array making code
+            $courseTitleList = $this->connection->query($keywordQuery);
+            $courseResultArray = $this->arrayify($courseTitleList);
 
-          //connection and array making code
-          $courseTitleList = $this->connection->query($keywordQuery);
-          $courseResultArray = $this->arrayify($courseTitleList);
+            //adds resulting array to final array iteratively
+            $i=0;
+            while ($i < sizeof($courseResultArray)) {
+                array_push($courseArray, $courseResultArray[$i]);
+                $i++;
+            }
 
-          //adds resulting array to final array iteratively
-          $i=0;
-          while ($i < sizeof($courseResultArray)) {
-              array_push($courseArray, $courseResultArray[$i]);
-              $i++;
-          }
-
-          $professorQuery = "SELECT DISTINCT section.FK_course
+            $professorQuery = "SELECT DISTINCT section.FK_course
                            FROM professor
                             INNER JOIN meeting
                               ON professor.FK_meeting = meeting.PK_meeting
@@ -244,39 +319,54 @@ class Database
                               ON meeting.FK_section = section.PK_section
                             WHERE professor.professor LIKE '%$keyword%'";
 
-          $professorList = $this->connection->query($professorQuery);
-          $professorResultArray = $this->arrayify($professorList);
-          $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
+            $professorList = $this->connection->query($professorQuery);
+            $professorResultArray = $this->arrayify($professorList);
+            $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
 
 
-          $j=0;
-          while ($j < sizeof($professorResultArray)) {
-              $professorQuery = "SELECT DISTINCT title, peoplesoftID
+            $j=0;
+            while ($j < sizeof($professorResultArray)) {
+                $professorQuery = "SELECT DISTINCT title, peoplesoftID
                              FROM course
                              WHERE PK_course = '$professorResultArray[$j]'";
 
-              $professorList = $this->connection->query($professorQuery);
-              $professorResult[] = mysqli_fetch_row($professorList);
-              array_push($courseArray, $professorResult[$j]);
-              $j++;
-          }
+                $professorList = $this->connection->query($professorQuery);
+                $professorResult[] = mysqli_fetch_row($professorList);
+                array_push($courseArray, $professorResult[$j]);
+                $j++;
+            }
+        } else {
+            //connection and array making code
+            $courseTitleList = $this->connection->query($keywordQuery);
+            $courseResultArray = $this->arrayify($courseTitleList);
 
-        }
-
-        else {
-          //connection and array making code
-          $courseTitleList = $this->connection->query($keywordQuery);
-          $courseResultArray = $this->arrayify($courseTitleList);
-
-          //adds resulting array to final array iteratively
-          $i=0;
-          while ($i < sizeof($courseResultArray)) {
-              array_push($courseArray, $courseResultArray[$i]);
-              $i++;
-          }
+            //adds resulting array to final array iteratively
+            $i=0;
+            while ($i < sizeof($courseResultArray)) {
+                array_push($courseArray, $courseResultArray[$i]);
+                $i++;
+            }
         }
 
         return $courseArray;
+    }
+
+    public function returnCoursesWithTime($time)
+    {
+        $timeQuery = "SELECT DISTINCT title, peoplesoftID FROM section
+                          INNER JOIN meeting
+                          ON meeting.FK_section = section.PK_section
+                          INNER JOIN course
+                          ON section.FK_course = course.PK_course
+                          WHERE term LIKE '%2019%'
+                          AND term LIKE '%Spring%'
+                          AND times LIKE '%$time%'";
+
+
+        $courseTitleList = $this->connection->query($timeQuery);
+        $coursesWithoutTime = $this->arrayify($courseTitleList);
+
+        return $coursesWithoutTime;
     }
 
 
@@ -295,6 +385,142 @@ class Database
 
         return $courseArray;
     }
+
+    public function regex($regex)
+    {
+    }
+
+    public function convertDayToInt($array)
+    {
+        $i=0;
+        while ($i<sizeof($array)) {
+            $array[$i] = preg_replace('/U/', 0, $array[$i]);
+            $array[$i] = preg_replace('/M/', 1, $array[$i]);
+            $array[$i] = preg_replace('/T/', 2, $array[$i]);
+            $array[$i] = preg_replace('/W/', 3, $array[$i]);
+            $array[$i] = preg_replace('/R/', 4, $array[$i]);
+            $i++;
+        }
+
+        return $array;
+    }
+
+    public function returnCourseTime($peoplesoftID)
+    {
+        //query
+        $timeQuery = "SELECT days, times, title, peoplesoftID, description FROM meeting
+                        INNER JOIN section
+                        ON meeting.FK_section=section.PK_section
+                        INNER JOIN course
+                        ON section.FK_course=course.PK_course
+                        WHERE section.term LIKE '%Spring%'
+                        AND section.term LIKE '%2019%'
+                        AND course.peoplesoftID = '$peoplesoftID'";
+
+
+        $timeInfoList = $this->connection->query($timeQuery);
+        $timeInfoArray = $this->arrayify($timeInfoList);
+        $timeInfoArray =  $this->make1D($timeInfoArray);
+
+        //if there exists a colon, save what's BEFORE it into $beforeSemiColon
+        //and what's AFTER it into $afterSemiColon
+
+        $primaryTimes = [];
+        $secondaryTimes = [];
+
+
+        preg_match_all('/[A-Z]/', $timeInfoArray[0], $matches);
+        $days = $this->make1D($matches);
+        $days = $this->convertDayToInt($days);
+        $i = 0;
+        while ($i < sizeof($days)) {
+            $primaryTimes["days"][$i] = $days[$i];
+            $i++;
+        }
+
+        if (preg_match_all('/;/', $timeInfoArray[1])) {
+            preg_match_all('/[^;]*/', $timeInfoArray[1], $matches);
+            $matches = $this->make1D($matches);
+            $beforeSemiColon = $matches[0];
+            $afterSemiColon = $matches[2];
+        } else {
+            $beforeSemiColon=$timeInfoArray[1];
+            $afterSemiColon=null;
+        }
+
+        preg_match_all('/\d\d(?=:)/', $beforeSemiColon, $matches);
+        $matches = $this->make1D($matches);
+        $i = 0;
+        while ($i < sizeof($days)) {
+            $primaryTimes["startHour"][$i] = $matches[0];
+            $primaryTimes["endHour"][$i] = $matches[1];
+            $i++;
+        }
+
+        preg_match_all('/\d\d(?!:)/', $beforeSemiColon, $matches);
+        $matches = $this->make1D($matches);
+        $i = 0;
+        while ($i < sizeof($days)) {
+            $primaryTimes["startMinute"][$i] = $matches[0];
+            $primaryTimes["endMinute"][$i] = $matches[1];
+            $i++;
+        }
+
+
+        //secondarytimes
+
+        if ($afterSemiColon!=null) {
+            preg_match_all('/[A-Z]/', $afterSemiColon, $matches);
+            $days = $this->make1D($matches);
+            $days = $this->convertDayToInt($days);
+            $i = 0;
+            while ($i < sizeof($days)) {
+                $secondaryTimes["days"][$i] = $days[$i];
+                $i++;
+            }
+
+            preg_match_all('/\d\d(?=:)/', $afterSemiColon, $matches);
+            $matches = $this->make1D($matches);
+            $i = 0;
+            while ($i < sizeof($days)) {
+                $secondaryTimes["startHour"][$i] = $matches[0];
+                $secondaryTimes["endHour"][$i] = $matches[1];
+                $i++;
+            }
+
+            preg_match_all('/\d\d(?!:)/', $afterSemiColon, $matches);
+            $matches = $this->make1D($matches);
+            $i = 0;
+            while ($i < sizeof($days)) {
+                $secondaryTimes["startMinute"][$i] = $matches[0];
+                $secondaryTimes["endMinute"][$i] = $matches[1];
+                $i++;
+            }
+        }
+
+        $mergedTimes = array_merge_recursive($primaryTimes, $secondaryTimes);
+
+        $eventArray = [];
+
+        $i=0;
+        while ($i<sizeof($mergedTimes["days"])) {
+            $event = ["title"        => $timeInfoArray[2],
+                    "peopleSoftID" => $timeInfoArray[3],
+                    #"description"  => $timeInfoArray[4],
+                    "day"          => $mergedTimes["days"][$i],
+                    "startHour"    => $mergedTimes["startHour"][$i],
+                    "startMinute"  => $mergedTimes["startMinute"][$i],
+                    "endHour"      => $mergedTimes["endHour"][$i],
+                    "endMinute"    => $mergedTimes["endMinute"][$i]
+                    ];
+            $eventArray[] = $event;
+            $i++;
+        }
+
+
+        return $eventArray;
+    }
+
 
 
     public function __destruct()

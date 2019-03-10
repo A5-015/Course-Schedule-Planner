@@ -7,13 +7,11 @@ include("ChromePhp.php");
 require_once("../backend/dbConnector.php");
 require_once("../backend/student.php");
 
-
-
 if (isset($_POST['search'])) {
 
    $query = $_POST['search'];
    if(($query != "")&&(strlen($query) > 2)){
-     $thing = $db -> returnCourses(FALSE, $query);
+     $thing = $student -> db -> returnCourses(FALSE, $query);
 
       echo "
             <table class='standartLongTable'>
@@ -27,32 +25,47 @@ if (isset($_POST['search'])) {
       }
       echo "   </tbody>
             </table>";
-   } else {
-
-     // used to show default page when search was used and the keyword deleted afterwards
-     $thing = $db->returnAllMajors();
-
-     echo "
-           <table class='standartTable'>
-             <tbody>";
-     for ($x = 0; $x < 10; $x++) {
-         echo "
-             <tr>
-                 <td>Professors Name - Lastname</td>
-                 <td>Class Name</td>
-             </tr>";
-     }
-     echo "    </tbody>
-             </table>";
    }
+
+} else if (isset($_POST['returnAllCourses'])) {
+
+  $thing = $student -> db -> returnCourses(TRUE, "NULL");
+
+  echo "
+        <table class='standartTable'>
+          <tbody>";
+  $counter = 0;
+  for ($x = 0; ($x < sizeof($thing)&&($counter < 10)); $x = $x + rand(5, 20)) {
+    if (rand(0, 1)){
+      echo "
+          <tr>
+              <td>".$thing[$x][1]."</td>
+              <td>".$thing[$x][0]."</td>
+          </tr>";
+
+      $counter = $counter + 1;
+    }
+  }
+  echo "    </tbody>
+          </table>";
 
 } else if (isset($_POST['peopleSoftID'])) {
 
-    $query = $_POST['peopleSoftID'];
+  $query = $_POST['peopleSoftID'];
 
-    $student -> fetchFromSession();
-    $student -> shareMajorReqs($query);
-    $student -> pushToSession();
+  $student -> fetchFromSession();
+  $student -> shareMajorReqs($query);
+  $student -> pushToSession();
+
+} else if (isset($_POST['newPeopleSoftID'])) {
+
+  $query = $_POST['newPeopleSoftID'];
+
+  $student -> fetchFromSession();
+  //$student -> shareSelectedCourses($query);
+  $student -> selectedCourses[] = $student -> db -> returnCourseTime($query);
+  $student -> pushToSession();
+
 
 } else if (isset($_POST['constraintID'])) {
 
@@ -126,6 +139,41 @@ if (isset($_POST['search'])) {
     }
 
     $student -> pushToSession();
+
+} else if (isset($_POST['returnClickableFilteredCourses'])) {
+  $_SESSION["requiredContent"] = "requirementSelectionList";
+  $_SESSION["requiredContentArgument"] = "filteredAll";
+  include "contentCreatorSession.php";
+  $_SESSION["requiredContentArgument"] = "";
+  $_SESSION["requiredContent"] = "";
+
+} else if (isset($_POST['returnNewClickableFilteredCourses'])) {
+  $_SESSION["requiredContent"] = "requirementSelectionList";
+  $_SESSION["requiredContentArgument"] = "filteredAllForNewSelection";
+  include "contentCreatorSession.php";
+  $_SESSION["requiredContentArgument"] = "";
+  $_SESSION["requiredContent"] = "";
+
+} else if (isset($_POST['returnClickableSearch'])) {
+
+  $query = $_POST['returnClickableSearch'];
+  if(($query != "")&&(strlen($query) > 2)){
+    $thing = $student -> db -> returnCourses(FALSE, $query);
+
+     echo "
+           <table class='standartLongTable'>
+             <tbody>";
+   for($x = 0; $x < sizeof($thing); $x++){
+      $char = '"';
+       echo "
+           <tr onclick='processRows(".$char.$thing[$x][1].$char.")>
+               <td>".$thing[$x][0]."</td>
+               <td>".$thing[$x][1]."</td>
+           </tr>";
+     }
+     echo "   </tbody>
+           </table>";
+  }
 
 }
 
