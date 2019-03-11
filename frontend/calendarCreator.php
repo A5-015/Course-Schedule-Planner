@@ -3,7 +3,6 @@
 session_start();
 
 echo '
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,48 +43,46 @@ echo '
 
       ';
 
-$thing = $_SESSION["selectedCourses"];
+        $thing = $_SESSION["selectedCourses"];
 
-foreach($thing as $class){
-   foreach($class as $individualDates){
+        foreach($thing as $class){
+           foreach($class as $individualDates){
 
-       $startTimeHour = $individualDates['startHour'];
-       $startTimeMinute = $individualDates['startMinute'];
-       $endTimeHour = $individualDates['endHour'];
-       $endTimeMinute = $individualDates['endMinute'];
+               $startTimeHour = $individualDates['startHour'];
+               $startTimeMinute = $individualDates['startMinute'];
+               $endTimeHour = $individualDates['endHour'];
+               $endTimeMinute = $individualDates['endMinute'];
 
-       $title = $individualDates['title'];
-       $description = $individualDates['description'];
+               $title = $individualDates['title'];
+               $description = $individualDates['description'];
 
-       $description = utf8_encode($description);
+               $description = utf8_encode($description);
 
-       $dayOfTheWeek = $individualDates['day'];
+               $dayOfTheWeek = $individualDates['day'];
 
-       $id = $individualDates['peopleSoftID'];
+               $id = $individualDates['peopleSoftID'];
 
-       echo '
-       {
-         start: now.startOf("week").add('.$startTimeHour.', "h").add('.$dayOfTheWeek.', "days").add('.$startTimeMinute.', "m").format("X"),
-         end: now.startOf("week").add('.$endTimeHour.', "h").add('.$dayOfTheWeek.', "days").add('.$endTimeMinute.', "m").format("X"),
-         title: "'.$title.'",
-         content: "Course ID: '.$id.'<br>'.$description.'",
-         category: "'.$id.'"
-       }
-       ';
+               echo '
+               {
+                 start: now.startOf("week").add('.$startTimeHour.', "h").add('.$dayOfTheWeek.', "days").add('.$startTimeMinute.', "m").format("X"),
+                 end: now.startOf("week").add('.$endTimeHour.', "h").add('.$dayOfTheWeek.', "days").add('.$endTimeMinute.', "m").format("X"),
+                 title: "'.$title.'",
+                 content: "Course ID: '.$id.'<br>'.$description.'",
+                 category: "'.$id.'"
+               }
+               ';
 
-        echo ',';
-/*
-       if($x != ($last - 1)){
-         echo ',';
-       }
-*/
+                echo ',';
+        /*
+               if($x != ($last - 1)){
+                 echo ',';
+               }
+        */
 
    }
  }
 
-
-
-    echo '
+echo '
     ];
 
       /**
@@ -99,7 +96,7 @@ foreach($thing as $class){
         weekday: {
           timeline: {
             intervalMinutes: 30,
-            fromHour: 9,
+            fromHour: 7,
             toHour: 19
           }
         },
@@ -114,9 +111,6 @@ foreach($thing as $class){
   </script>
 </body>
 
-</html>
+</html>';
 
-
-';
-
- ?>
+?>
