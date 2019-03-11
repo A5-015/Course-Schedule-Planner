@@ -28,7 +28,7 @@
 
 class Database
 {
-    // holds important database connection information
+    // holds important database connection information; it is made private
     private static $db_host = "localhost";
     private static $db_user = "bsimsekc_nishant";
     private static $db_pass = "reppepreppep";
@@ -51,6 +51,7 @@ class Database
         return $connection;
     }
 
+    //used to return sql queries in a readable, usable format
     public function arrayify($list)
     {
         //cleans up how the results from database queries are presented
@@ -60,7 +61,8 @@ class Database
         return $array;
     }
 
-    //function that converts a 2d array into a simple, 1D array
+    //function that converts a 2d array into a 1D array by grabbing the first index of the 2D array
+    //formerly known as fixArray
     public function fixArray($size, $array)
     {
         $i=0;
@@ -74,6 +76,8 @@ class Database
         return $array;
     }
 
+    //function that converts an unnecessarily nested 2d array into a 1D array
+    //formerly knonwn as make1D
     public function make1D($array)
     {
         $i=0;
@@ -86,21 +90,7 @@ class Database
         return $oneDArray;
     }
 
-
-    // public function querySet($passedQuery, $passedArray, $returnArray)
-    // {
-    //     $x =0;
-    //     while ($x < sizeof($passedArray)) {
-    //         $list = $this->connection->query($passedQuery);
-    //         $result = mysqli_fetch_row($list);
-    //         array_push($returnArray, $result);
-    //         $x++;
-    //     }
-    //
-    //     return $returnArray;
-    // }
-
-
+    //function that returns all majors
     public function returnAllMajors()
     {
         $allMajorQuery = "SELECT major, id FROM category";
@@ -110,179 +100,48 @@ class Database
         return $majorArray[0];
     }
 
+    //function that returns the major name given the internal reference ID for the major
     public function returnMajorName($majorID)
     {
         $majorNameQuery = "SELECT major FROM category WHERE id = '$majorID'";
         $majorName = $this->connection->query($majorNameQuery);
         $majorName = $this->arrayify($majorName);
-        //$majorName = $this->fixArray(sizeof($majorName),$majorName);
 
         return $majorName;
     }
 
+    //DEPRECATED FUNCTION;
+    // public function returnMajorID($major)
+    // {
+    //     $majorIDQuery = "SELECT id FROM category WHERE major = '$major'";
+    //     $majorID = $this->connection->query($majorIDQuery);
+    //     $majorID = $this->arrayify(sizeof($majorID), $majorID);
+    //
+    //     return $majorID;
+    // }
 
-    public function returnMajorID($major)
-    {
-        $majorIDQuery = "SELECT id FROM category WHERE major = '$major'";
-        $majorID = $this->connection->query($majorIDQuery);
-        $majorID = $this->arrayify(sizeof($majorID), $majorID);
-
-        return $majorID;
-    }
-
+    //function that returns all the major requirements given the internal reference ID of the major
     public function returnMajorReq($majorID)
     {
-        $courseIDQuery = "SELECT title, peoplesoftID FROM course
+        //SQL query relating apperars and course tables together to obtain the
+        //title and peopleSoftID of the major specific required courses
+        $reqQuery = "SELECT title, peoplesoftID FROM course
                           INNER JOIN appears
                           ON appears.FK_course = course.PK_course
                           WHERE categoryID = '$majorID'
                           AND required = 'true'";
-        $courseIDList = $this->connection->query($courseIDQuery);
+        $reqList = $this->connection->query($reqQuery);
+        $reqArray = $this->arrayify($reqList);
 
-        $courseIDArray = $this->arrayify($courseIDList);
-
-        //
-        // $x=0;
-        // while ($x < $listNum) {
-        //     $courseIDArr[] = $courseIDArray[0][$x][0];
-        //     $x++;
-        // }
-        //
-        // $reqArray = [];
-        // $x=0;
-        // while ($x < sizeof($courseIDArr)) {
-        //     $reqQuery = "SELECT title, peoplesoftID FROM course WHERE PK_course = $courseIDArr[$x]";
-        //     $reqList = $this->connection->query($reqQuery);
-        //     $reqResult = mysqli_fetch_row($reqList);
-        //     array_push($reqArray, $reqResult);
-        //     $x++;
-        // }
-
-        return $courseIDArray;
+        return $reqArray;
     }
 
-    // public function returnCourses2($keyword)
-    // {
-    //     //master list
-    //     $courseArray = [];
-    //
-    //     //gives the courses based on the title search
-    //     $keywordQuery = "SELECT title, peoplesoftID FROM course WHERE title LIKE '%$keyword%'";
-    //     $courseTitleList = $this->connection->query($keywordQuery);
-    //     $resultArray = $this->arrayify($courseTitleList);
-    //
-    //     $i=0;
-    //     while ($i < sizeof($resultArray)) {
-    //         array_push($courseArray, $resultArray[$i]);
-    //         $i++;
-    //     }
-    //
-    //     //searches for professors using keywords and returns meeting key
-    //     $keywordQuery = "SELECT FK_meeting FROM professor WHERE professor LIKE '%$keyword%'";
-    //     $meetingList = $this->connection->query($keywordQuery);
-    //     $listNum = $meetingList->num_rows;
-    //     $meetingArray = $this->arrayify($meetingList);
-    //     $meetingArray = $this->fixArray($listNum, $meetingArray);
-    //
-    //     //searches section key based on provided meeting key
-    //     $sectionArray = [];
-    //     $j=0;
-    //     while ($j < sizeof($meetingArray)) {
-    //         $sectionQuery = "SELECT FK_section FROM meeting WHERE PK_meeting = $meetingArray[$j]";
-    //         $sectionList = $this->connection->query($sectionQuery);
-    //         $sectionResult = mysqli_fetch_row($sectionList);
-    //         array_push($sectionArray, $sectionResult);
-    //         $j++;
-    //     }
-    //
-    //     $sectionArraySize = sizeof($sectionArray);
-    //     $sectionArray = $this->fixArray($sectionArraySize, $sectionArray);
-    //
-    //     //searches course key based on provided section key
-    //     $courseKeyArray = [];
-    //     $k=0;
-    //     while ($k < $sectionArraySize) {
-    //         $courseKeyQuery = "SELECT FK_course FROM section WHERE PK_section = $sectionArray[$k]";
-    //         $courseKeyList = $this->connection->query($courseKeyQuery);
-    //         $courseKeyResult = mysqli_fetch_row($courseKeyList);
-    //         array_push($courseKeyArray, $courseKeyResult);
-    //         $k++;
-    //     }
-    //
-    //     $courseKeyArraySize = sizeof($courseKeyArray);
-    //     $courseKeyArray = $this->fixArray($courseKeyArraySize, $courseKeyArray);
-    //
-    //     // (finally...)searches title and peoplesoftID based on provided course key
-    //     $l=0;
-    //     while ($l < $courseKeyArraySize) {
-    //         $courseQuery = "SELECT title, peoplesoftID FROM course WHERE PK_course = $courseKeyArray[$l]";
-    //         $courseList = $this->connection->query($courseQuery);
-    //         $courseResult = mysqli_fetch_row($courseList);
-    //         array_push($courseArray, $courseResult);
-    //         $l++;
-    //     }
-    //
-    //
-    //     return $courseArray;
-    // }
-
-    // public function returnCourses($keyword)
-    // {
-    //     //instantate the FINAL array as an array
-    //     $courseArray = [];
-    //
-    //     //compact query for KEYWORD, current SEMESTER, current YEAR
-    //     $keywordQuery = "SELECT DISTINCT title, peoplesoftID
-    //                    FROM course INNER JOIN section
-    //                       ON course.PK_course = section.FK_course
-    //                    WHERE course.title LIKE '%$keyword%'
-    //                    AND section.term LIKE '%Spring%'
-    //                    AND section.term LIKE '%2019%'";
-    //
-    //     //connection and array making code
-    //     $courseTitleList = $this->connection->query($keywordQuery);
-    //     $courseResultArray = $this->arrayify($courseTitleList);
-    //
-    //     //adds resulting array to final array iteratively
-    //     $i=0;
-    //     while ($i < sizeof($courseResultArray)) {
-    //         array_push($courseArray, $courseResultArray[$i]);
-    //         $i++;
-    //     }
-    //
-    //     $professorQuery = "SELECT DISTINCT section.FK_course
-    //                      FROM professor
-    //                       INNER JOIN meeting
-    //                      		ON professor.FK_meeting = meeting.PK_meeting
-    //                       INNER JOIN section
-    //                       	ON meeting.FK_section = section.PK_section
-    //                       WHERE professor.professor LIKE '%$keyword%'";
-    //
-    //     $professorList = $this->connection->query($professorQuery);
-    //     $professorResultArray = $this->arrayify($professorList);
-    //     $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
-    //
-    //
-    //     $j=0;
-    //     while ($j < sizeof($professorResultArray)) {
-    //         $professorQuery = "SELECT DISTINCT title, peoplesoftID
-    //                        FROM course
-    //                        WHERE PK_course = '$professorResultArray[$j]'";
-    //
-    //         $professorList = $this->connection->query($professorQuery);
-    //         $professorResult[] = mysqli_fetch_row($professorList);
-    //         array_push($courseArray, $professorResult[$j]);
-    //         $j++;
-    //     }
-    //
-    //     return $courseArray;
-    // }
-    //
-    // public function returnAllCourses(){
-    //
-    // }
-
-    public function returnCourses(bool $returnAll, $keyword)
+    //function that returnsCourses based on whether all or only keyword related
+    //are needed and whether or not the duplicate courses are needed:
+    //example 1: returnCourses(true, "null", "null");
+    //example 2: returnCourses(false, true, "object-oriented");
+    //example 3: returnCourses(false, false, "object-oriented");
+    public function returnCourses(bool $returnAll, bool $distinct, $keyword)
     {
         //instantate the FINAL array as an array
         $courseArray = [];
@@ -293,12 +152,21 @@ class Database
                           ON course.PK_course = section.FK_course
                        WHERE section.term LIKE '%Spring%'
                        AND section.term LIKE '%2019%'";
-        //AND course.title LIKE '%$keyword%';
 
+        //in the case that query is keyword specific, then append the keyword
+        //to the SQL query.
         if ($returnAll == false) {
-            $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%'";
-
-            //connection and array making code
+            if ($distinct == true) {
+                $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%'";
+            } elseif ($distinct == false) {
+                $keywordQuery = "SELECT title, peoplesoftID
+                             FROM course INNER JOIN section
+                                ON course.PK_course = section.FK_course
+                             WHERE section.term LIKE '%Spring%'
+                             AND section.term LIKE '%2019%'
+                             AND course.title LIKE '%$keyword%'";
+            }
+            //connection and array making
             $courseTitleList = $this->connection->query($keywordQuery);
             $courseResultArray = $this->arrayify($courseTitleList);
 
@@ -309,32 +177,61 @@ class Database
                 $i++;
             }
 
-            $professorQuery = "SELECT DISTINCT section.FK_course
-                           FROM professor
-                            INNER JOIN meeting
-                              ON professor.FK_meeting = meeting.PK_meeting
-                            INNER JOIN section
-                              ON meeting.FK_section = section.PK_section
-                            WHERE professor.professor LIKE '%$keyword%'";
+            //part one of query to return courses taught by professor put as keyword
+            //split into two parts as SQL engine would return errors
+            //this query only returns the foreign key of the final table "course"
 
-            $professorList = $this->connection->query($professorQuery);
-            $professorResultArray = $this->arrayify($professorList);
-            $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
+            // if ($distinct == true) {
+            //     $professorQuery = "SELECT DISTINCT section.FK_course
+            //                  FROM professor
+            //                   INNER JOIN meeting
+            //                     ON professor.FK_meeting = meeting.PK_meeting
+            //                   INNER JOIN section
+            //                     ON meeting.FK_section = section.PK_section
+            //                   WHERE professor.professor LIKE '%$keyword%'";
+            // } elseif ($distinct == false) {
+                $professorQuery = "SELECT DISTINCT section.FK_course
+                             FROM professor
+                              INNER JOIN meeting
+                                ON professor.FK_meeting = meeting.PK_meeting
+                              INNER JOIN section
+                                ON meeting.FK_section = section.PK_section
+                              WHERE professor.professor LIKE '%$keyword%'
+                              AND section.term LIKE '%Spring%'
+                              AND section.term LIKE '%2019%'";
+            // }
 
+            //query and array making and formatting of results
+                $professorList = $this->connection->query($professorQuery);
+                $professorResultArray = $this->arrayify($professorList);
+                $professorResultArray = $this->fixArray(sizeof($professorResultArray), $professorResultArray);
 
+            //iteratively search for course title and peopleSoftID from the
+            //foreign key array
             $j=0;
             while ($j < sizeof($professorResultArray)) {
-                $professorQuery = "SELECT DISTINCT title, peoplesoftID
-                             FROM course
-                             WHERE PK_course = '$professorResultArray[$j]'";
+                if ($distinct == true) {
+                    $professorQuery = "SELECT DISTINCT title, peoplesoftID
+                                    FROM course
+                                    WHERE PK_course = '$professorResultArray[$j]'";
+                } elseif ($distinct == false) {
+                    $professorQuery = "SELECT title, peoplesoftID
+                                    FROM course
+                                    WHERE PK_course = '$professorResultArray[$j]'";
+                }
 
+                //query and array making and formatting of results
                 $professorList = $this->connection->query($professorQuery);
                 $professorResult[] = mysqli_fetch_row($professorList);
+                //pushes results to the final array
                 array_push($courseArray, $professorResult[$j]);
                 $j++;
             }
+
+            //if the argument is TRUE, use the original query which
+          //does not include a keyword, thus showing all the current semester courses
         } else {
-            //connection and array making code
+            //query and array making and formatting of results
             $courseTitleList = $this->connection->query($keywordQuery);
             $courseResultArray = $this->arrayify($courseTitleList);
 
@@ -345,10 +242,12 @@ class Database
                 $i++;
             }
         }
-
+        //returns the early on instantated array
         return $courseArray;
     }
 
+    //function that returns all courses given a class time in the 24 hour format
+    //eg: returnCoursesWithTime("09:00")
     public function returnCoursesWithTime($time)
     {
         $timeQuery = "SELECT DISTINCT title, peoplesoftID FROM section
@@ -362,12 +261,13 @@ class Database
 
 
         $courseTitleList = $this->connection->query($timeQuery);
-        $coursesWithoutTime = $this->arrayify($courseTitleList);
+        $coursesWithTime = $this->arrayify($courseTitleList);
 
-        return $coursesWithoutTime;
+        return $coursesWithTime;
     }
 
 
+    //function that returns the course name given the courseID name (aka peopleSoftID)
     public function returnCourseName($peoplesoftIDArray)
     {
         $peoplesoftIDArraySize = sizeof($peoplesoftIDArray);
@@ -384,10 +284,7 @@ class Database
         return $courseArray;
     }
 
-    public function regex($regex)
-    {
-    }
-
+    //function that converts su
     public function convertDayToInt($array)
     {
         $i=0;
@@ -403,21 +300,48 @@ class Database
         return $array;
     }
 
-    public function returnCourseTime($peoplesoftID)
+    public function courseTimeQuery($peoplesoftID)
     {
-        //query
-        $timeQuery = "SELECT days, times, title, peoplesoftID, description FROM meeting
-                        INNER JOIN section
-                        ON meeting.FK_section=section.PK_section
-                        INNER JOIN course
-                        ON section.FK_course=course.PK_course
-                        WHERE section.term LIKE '%Spring%'
-                        AND section.term LIKE '%2019%'
-                        AND course.peoplesoftID = '$peoplesoftID'";
+      //query
+      $timeQuery = "SELECT days, times, title, peoplesoftID, description FROM meeting
+                      INNER JOIN section
+                      ON meeting.FK_section=section.PK_section
+                      INNER JOIN course
+                      ON section.FK_course=course.PK_course
+                      WHERE section.term LIKE '%Spring%'
+                      AND section.term LIKE '%2019%'
+                      AND course.peoplesoftID = '$peoplesoftID'";
 
+      $timeInfoList = $this->connection->query($timeQuery);
+      $timeInfoArray = $this->arrayify($timeInfoList);
 
-        $timeInfoList = $this->connection->query($timeQuery);
-        $timeInfoArray = $this->arrayify($timeInfoList);
+      $i=0;
+      while($i<sizeof($timeInfoArray))
+      {
+        $eventArray [] = $this->returnCourseTime(array_slice($timeInfoArray, $i, 1));
+        $i++;
+      }
+
+      $i=1;
+      while($i<sizeof($eventArray))
+      {
+        $j=0;
+        while($j<sizeof($eventArray[$i]))
+        {
+          $eventArray[0][] = $eventArray[$i][$j];
+          unset($eventArray[$i][$j]);
+          $j++;
+        }
+      $i++;
+      }
+
+      $eventArray = $this->make1D($eventArray);
+      return $eventArray;
+
+    }
+
+    public function returnCourseTime($timeInfoArray)
+    {
         $timeInfoArray =  $this->make1D($timeInfoArray);
 
         //if there exists a colon, save what's BEFORE it into $beforeSemiColon
@@ -504,7 +428,7 @@ class Database
         while ($i<sizeof($mergedTimes["days"])) {
             $event = ["title"        => $timeInfoArray[2],
                     "peopleSoftID" => $timeInfoArray[3],
-                    #"description"  => $timeInfoArray[4],
+                    "description"  => $timeInfoArray[4],
                     "day"          => $mergedTimes["days"][$i],
                     "startHour"    => $mergedTimes["startHour"][$i],
                     "startMinute"  => $mergedTimes["startMinute"][$i],
@@ -518,8 +442,6 @@ class Database
 
         return $eventArray;
     }
-
-
 
     public function __destruct()
     {

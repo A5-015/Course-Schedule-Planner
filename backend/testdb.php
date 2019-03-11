@@ -2,7 +2,7 @@
 
 include "branchDB.php";
 
-$thing = $db->returnMajorReq("72");
+$thing = $db->courseTimeQuery("ENGR-UH 2510");
 echo "<pre>";
 print_r($thing);
 echo "</pre>";

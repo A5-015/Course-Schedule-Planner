@@ -137,10 +137,11 @@ class Database
     }
 
     //function that returnsCourses based on whether all or only keyword related
-    //are needed:
-    //example 1: returnCourses(true, "null");
-    //example 2: returnCourses(false, "object-oriented");
-    public function returnCourses(bool $returnAll, $keyword)
+    //are needed and whether or not the duplicate courses are needed:
+    //example 1: returnCourses(true, "null", "null");
+    //example 2: returnCourses(false, true, "object-oriented");
+    //example 3: returnCourses(false, false, "object-oriented");
+    public function returnCourses(bool $returnAll, bool $distinct, $keyword)
     {
         //instantate the FINAL array as an array
         $courseArray = [];
@@ -155,8 +156,16 @@ class Database
         //in the case that query is keyword specific, then append the keyword
         //to the SQL query.
         if ($returnAll == false) {
-            $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%' OR course.peoplesoftID LIKE '%$keyword%'";
-
+            if ($distinct == true) {
+                $keywordQuery = $keywordQuery."AND course.title LIKE '%$keyword%'";
+            } elseif ($distinct == false) {
+                $keywordQuery = "SELECT title, peoplesoftID
+                             FROM course INNER JOIN section
+                                ON course.PK_course = section.FK_course
+                             WHERE section.term LIKE '%Spring%'
+                             AND section.term LIKE '%2019%'
+                             AND course.title LIKE '%$keyword%'";
+            }
             //connection and array making
             $courseTitleList = $this->connection->query($keywordQuery);
             $courseResultArray = $this->arrayify($courseTitleList);
@@ -171,13 +180,26 @@ class Database
             //part one of query to return courses taught by professor put as keyword
             //split into two parts as SQL engine would return errors
             //this query only returns the foreign key of the final table "course"
+
+            // if ($distinct == true) {
+            //     $professorQuery = "SELECT DISTINCT section.FK_course
+            //                  FROM professor
+            //                   INNER JOIN meeting
+            //                     ON professor.FK_meeting = meeting.PK_meeting
+            //                   INNER JOIN section
+            //                     ON meeting.FK_section = section.PK_section
+            //                   WHERE professor.professor LIKE '%$keyword%'";
+            // } elseif ($distinct == false) {
             $professorQuery = "SELECT DISTINCT section.FK_course
-                           FROM professor
-                            INNER JOIN meeting
-                              ON professor.FK_meeting = meeting.PK_meeting
-                            INNER JOIN section
-                              ON meeting.FK_section = section.PK_section
-                            WHERE professor.professor LIKE '%$keyword%'";
+                             FROM professor
+                              INNER JOIN meeting
+                                ON professor.FK_meeting = meeting.PK_meeting
+                              INNER JOIN section
+                                ON meeting.FK_section = section.PK_section
+                              WHERE professor.professor LIKE '%$keyword%'
+                              AND section.term LIKE '%Spring%'
+                              AND section.term LIKE '%2019%'";
+            // }
 
             //query and array making and formatting of results
             $professorList = $this->connection->query($professorQuery);
@@ -188,9 +210,15 @@ class Database
             //foreign key array
             $j=0;
             while ($j < sizeof($professorResultArray)) {
-                $professorQuery = "SELECT DISTINCT title, peoplesoftID
-                                   FROM course
-                                   WHERE PK_course = '$professorResultArray[$j]'";
+                if ($distinct == true) {
+                    $professorQuery = "SELECT DISTINCT title, peoplesoftID
+                                    FROM course
+                                    WHERE PK_course = '$professorResultArray[$j]'";
+                } elseif ($distinct == false) {
+                    $professorQuery = "SELECT title, peoplesoftID
+                                    FROM course
+                                    WHERE PK_course = '$professorResultArray[$j]'";
+                }
 
                 //query and array making and formatting of results
                 $professorList = $this->connection->query($professorQuery);
@@ -200,7 +228,7 @@ class Database
                 $j++;
             }
 
-          //if the argument is TRUE, use the original query which
+            //if the argument is TRUE, use the original query which
           //does not include a keyword, thus showing all the current semester courses
         } else {
             //query and array making and formatting of results
@@ -214,8 +242,8 @@ class Database
                 $i++;
             }
         }
-          //returns the early on instantated array
-          return $courseArray;
+        //returns the early on instantated array
+        return $courseArray;
     }
 
     //function that returns all courses given a class time in the 24 hour format
@@ -256,7 +284,7 @@ class Database
         return $courseArray;
     }
 
-    //function
+    //function that converts days into an integer value for frontend use
     public function convertDayToInt($array)
     {
         $i=0;
@@ -271,31 +299,67 @@ class Database
 
         return $array;
     }
-
-    public function returnCourseTime($peoplesoftID)
+    //////////////////////////////////////////////////////////////////////////
+    //Note to the Reader: The following functions are long, messy, and painful
+    //because the database being used stores time information in two ways
+    //Some courses have the lab or recitation section stored in the same
+    //
+    //
+    //function that queries time information given the peopleSoftID
+    //it returns an array of "events" with all the time information
+    //////////////////////////////////////////////////////////////////////////
+    public function courseTimeQuery($peoplesoftID)
     {
         //query
         $timeQuery = "SELECT days, times, title, peoplesoftID, description FROM meeting
-                        INNER JOIN section
-                        ON meeting.FK_section=section.PK_section
-                        INNER JOIN course
-                        ON section.FK_course=course.PK_course
-                        WHERE section.term LIKE '%Spring%'
-                        AND section.term LIKE '%2019%'
-                        AND course.peoplesoftID = '$peoplesoftID'";
+                      INNER JOIN section
+                      ON meeting.FK_section=section.PK_section
+                      INNER JOIN course
+                      ON section.FK_course=course.PK_course
+                      WHERE section.term LIKE '%Spring%'
+                      AND section.term LIKE '%2019%'
+                      AND course.peoplesoftID = '$peoplesoftID'";
 
-
+        //query and array making and formatting of results
         $timeInfoList = $this->connection->query($timeQuery);
         $timeInfoArray = $this->arrayify($timeInfoList);
+
+        //this loop breaks the different sections (eg lecture and lab) into different arrays
+        $i=0;
+        while ($i<sizeof($timeInfoArray)) {
+            $eventArray [] = $this->returnCourseTime(array_slice($timeInfoArray, $i, 1));
+            $i++;
+        }
+
+        //this loop organizes the array so that it is a clean 2D array for frontend use
+        $i=1;
+        while ($i<sizeof($eventArray)) {
+            $j=0;
+            while ($j<sizeof($eventArray[$i])) {
+                $eventArray[0][] = $eventArray[$i][$j];
+                unset($eventArray[$i][$j]);
+                $j++;
+            }
+            $i++;
+        }
+
+        //final cleaning of the array for frontend presentation
+        $eventArray = $this->make1D($eventArray);
+        return $eventArray;
+    }
+
+
+    //this function does all the information organization heavy work for the
+    //returnCourseTime function
+    public function returnCourseTime($timeInfoArray)
+    {
+        //linearizes the received information
         $timeInfoArray =  $this->make1D($timeInfoArray);
-
-        //if there exists a colon, save what's BEFORE it into $beforeSemiColon
-        //and what's AFTER it into $afterSemiColon
-
+        //these arrays are made for the case where section information is saved in the same cell
         $primaryTimes = [];
         $secondaryTimes = [];
 
-
+        //runs a regex match for days of the week
         preg_match_all('/[A-Z]/', $timeInfoArray[0], $matches);
         $days = $this->make1D($matches);
         $days = $this->convertDayToInt($days);
@@ -305,6 +369,8 @@ class Database
             $i++;
         }
 
+        //regex match to split the string into its section (eg: lab and lecture)
+        //based on the semicolon
         if (preg_match_all('/;/', $timeInfoArray[1])) {
             preg_match_all('/[^;]*/', $timeInfoArray[1], $matches);
             $matches = $this->make1D($matches);
@@ -315,6 +381,7 @@ class Database
             $afterSemiColon=null;
         }
 
+        //takes the values before the colon (hour)
         preg_match_all('/\d\d(?=:)/', $beforeSemiColon, $matches);
         $matches = $this->make1D($matches);
         $i = 0;
@@ -324,6 +391,7 @@ class Database
             $i++;
         }
 
+        //takes the values after the colon (minutes)
         preg_match_all('/\d\d(?!:)/', $beforeSemiColon, $matches);
         $matches = $this->make1D($matches);
         $i = 0;
@@ -334,8 +402,7 @@ class Database
         }
 
 
-        //secondarytimes
-
+        //secondarytimes (the string after the semicolon)
         if ($afterSemiColon!=null) {
             preg_match_all('/[A-Z]/', $afterSemiColon, $matches);
             $days = $this->make1D($matches);
@@ -346,6 +413,7 @@ class Database
                 $i++;
             }
 
+            //finds the start hour and end hour
             preg_match_all('/\d\d(?=:)/', $afterSemiColon, $matches);
             $matches = $this->make1D($matches);
             $i = 0;
@@ -355,6 +423,7 @@ class Database
                 $i++;
             }
 
+            //finds the start minute and end minute
             preg_match_all('/\d\d(?!:)/', $afterSemiColon, $matches);
             $matches = $this->make1D($matches);
             $i = 0;
@@ -365,10 +434,13 @@ class Database
             }
         }
 
+        //merges the two arrays appropriately
         $mergedTimes = array_merge_recursive($primaryTimes, $secondaryTimes);
 
+        //instantiates the array it stores appropriately;
         $eventArray = [];
 
+        //while loop organizes all the above queried and computed information
         $i=0;
         while ($i<sizeof($mergedTimes["days"])) {
             $event = ["title"        => $timeInfoArray[2],
@@ -384,7 +456,7 @@ class Database
             $i++;
         }
 
-
+        //finally returns the event array
         return $eventArray;
     }
 
