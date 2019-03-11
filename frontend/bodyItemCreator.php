@@ -1,6 +1,6 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////
-//   This page handles anything that needs to be expressed in terms of html   //
+//  This class handles anything that needs to be expressed in terms of html   //
 ////////////////////////////////////////////////////////////////////////////////
 
 class BodyItem
@@ -103,7 +103,7 @@ class BodyItem
         echo "
             <div class='studentInformationText'>
 
-              Selected Major: ";
+              Selected Major: <i>";
 
         $thing = $this->student -> major[0][0];
 
@@ -112,7 +112,7 @@ class BodyItem
         } else {
             echo $thing;
         }
-        echo "
+        echo "</i>
             </div>";
         $this -> endRow();
     }
@@ -209,7 +209,7 @@ class BodyItem
                 }
             }
         } else {
-            echo "None";
+            echo "<i>None</i>";
         }
 
         echo "</div>";
@@ -223,99 +223,33 @@ class BodyItem
         // Fetching is need to decide for the checked buttons
         $this->student -> fetchFromSession();
 
+        $constraintsList = array("9AM", "PHYED", "FYWS", "CCOL", "CDAD", "CCEA", "CADT", "CSTS");
+        $constraintsListLabel = array("No 9AM", "Completed PE", "Completed FYWS", "Completed CCOL", "Completed CDAD", "Completed CCEA", "Completed CADT", "Completed CSTS");
+
         echo "
            <table class='constarintsTable'>
            <tr>
-             <td>
+             <td>";
 
-                 <input type='checkbox' class='checkbox' id='constraint1' value='9AM' onclick='processCheckboxes(1)'
-                 ";
-        if ($this->student -> constraints["9AM"]) {
-            echo "checked";
+        for($x = 1; $x < sizeof($constraintsList)+1; $x++){
+            echo "<input type='checkbox' class='checkbox' id='constraint".$x."' value='".$constraintsList[$x-1]."' onclick='processCheckboxes(".$x.")'";
+                if ($this->student -> constraints[$constraintsList[$x-1]]) {
+                    echo "checked";
+                }
+            echo "><label for='constraint".$x."' >".$constraintsListLabel[$x-1]."</label>";
+
+           if($x == 4){
+             echo "
+                </td>
+                <td>";
+           } else {
+             echo "<br>";
+
+           }
+
         }
+
         echo "
-                 >
-                 <label for='constraint1' >No 9AM</label>
-
-                 <br>
-
-                 <input type='checkbox' class='checkbox' id='constraint2' value='PE' onclick='processCheckboxes(2)'
-                   ";
-        if ($this->student -> constraints["PHYED"]) {
-            echo "checked";
-        }
-        echo "
-                 >
-                 <label for='constraint2' >Completed PE</label>
-
-                 <br>
-
-                 <input type='checkbox' class='checkbox' id='constraint3' value='FYWS' onclick='processCheckboxes(3)'
-                 ";
-        if ($this->student -> constraints["FYWS"]) {
-            echo "checked";
-        }
-        echo "
-                 >
-                 <label for='constraint3'>Completed FYWS</label>
-
-                 <br>
-
-                 <input type='checkbox' class='checkbox' id='constraint4' value='CCOL' onclick='processCheckboxes(4)'
-                 ";
-        if ($this->student -> constraints["CCOL"]) {
-            echo "checked";
-        }
-        echo "
-                 >
-                 <label for='constraint4' >Completed Colloquium</label>
-
-             </td>
-
-             <td>
-
-                 <input type='checkbox' class='checkbox' id='constraint5' value='CDAD' onclick='processCheckboxes(5)'
-                 ";
-        if ($this->student -> constraints["CDAD"]) {
-            echo "checked";
-        }
-        echo "
-                 >
-                 <label for='constraint5' >Completed CDAD</label>
-
-                 <br>
-
-                 <input type='checkbox' class='checkbox' id='constraint6' value='CCEA' onclick='processCheckboxes(6)'
-                 ";
-        if ($this->student -> constraints["CCEA"]) {
-            echo "checked";
-        }
-        echo "
-                 >
-                 <label for='constraint6' >Completed CCEA</label>
-
-                 <br>
-
-                 <input type='checkbox' class='checkbox' id='constraint7' value='CADT' onclick='processCheckboxes(7)'
-                 ";
-        if ($this->student -> constraints["CADT"]) {
-            echo "checked";
-        }
-        echo "
-                 >
-                 <label for='constraint7' >Completed CADT</label>
-
-                 <br>
-
-                 <input type='checkbox' class='checkbox' id='constraint8' value='CSTS' onclick='processCheckboxes(8)'
-                 ";
-        if ($this->student -> constraints["CSTS"]) {
-            echo "checked";
-        }
-        echo "
-                 >
-                 <label for='constraint8' >Completed CSTS</label>
-
              </td>
            </tr>
            </table>
@@ -327,7 +261,7 @@ class BodyItem
     {
         $this -> startRow();
         echo "<div class='studentInformationText'>
-   Selected Courses: ";
+        Selected Courses: ";
 
         $this->student -> fetchFromSession();
         $thing = $this->student -> returnSelectedCourses();
@@ -516,8 +450,8 @@ class BodyItem
     public function newPeopleSoftID($arg1 = " ")
     {
         $this->student -> fetchFromSession();
-        //$this->student -> shareSelectedCourses($arg1);
-        $this->student -> selectedCourses[] = $this->student -> db -> returnCourseTime($arg1);
+        $this->student -> shareSelectedCourses($arg1);
+        //$this->student -> selectedCourses[] = $this->student -> db -> returnCourseTime($arg1);
         $this->student -> pushToSession();
     }
 
@@ -526,62 +460,12 @@ class BodyItem
     {
         $this->student -> fetchFromSession();
 
-        if ($arg1 == "1") {
-            if ($this->student -> constraints["9AM"] == false) {
-                $this->student -> constraints["9AM"] = true;
-            } else {
-                $this->student -> constraints["9AM"] = false;
-            }
-        }
+        $constraintsList = ["9AM", "PHYED", "FYWS", "CCOL", "CDAD", "CCEA", "CADT", "CSTS"];
 
-        if ($arg1 == "2") {
-            if ($this->student -> constraints["PHYED"] == false) {
-                $this->student -> constraints["PHYED"] = true;
-            } else {
-                $this->student -> constraints["PHYED"] = false;
-            }
-        }
-        if ($arg1 == "3") {
-            if ($this->student -> constraints["FYWS"] == false) {
-                $this->student -> constraints["FYWS"] = true;
-            } else {
-                $this->student -> constraints["FYWS"] = false;
-            }
-        }
-        if ($arg1 == "4") {
-            if ($this->student -> constraints["CCOL"] == false) {
-                $this->student -> constraints["CCOL"] = true;
-            } else {
-                $this->student -> constraints["CCOL"] = false;
-            }
-        }
-        if ($arg1 == "5") {
-            if ($this->student -> constraints["CDAD"] == false) {
-                $this->student -> constraints["CDAD"] = true;
-            } else {
-                $this->student -> constraints["CDAD"] = false;
-            }
-        }
-        if ($arg1 == "6") {
-            if ($this->student -> constraints["CCEA"] == false) {
-                $this->student -> constraints["CCEA"] = true;
-            } else {
-                $this->student -> constraints["CCEA"] = false;
-            }
-        }
-        if ($arg1 == "7") {
-            if ($this->student -> constraints["CADT"] == false) {
-                $this->student -> constraints["CADT"] = true;
-            } else {
-                $this->student -> constraints["CADT"] = false;
-            }
-        }
-        if ($arg1 == "8") {
-            if ($this->student -> constraints["CSTS"] == false) {
-                $this->student -> constraints["CSTS"] = true;
-            } else {
-                $this->student -> constraints["CSTS"] = false;
-            }
+        if ($this->student -> constraints[$constraintsList[$arg1-1]] == false) {
+            $this->student -> constraints[$constraintsList[$arg1-1]] = true;
+        } else {
+            $this->student -> constraints[$constraintsList[$arg1-1]] = false;
         }
 
         $this->student -> pushToSession();
@@ -599,8 +483,9 @@ class BodyItem
              <tbody>";
             for ($x = 0; $x < sizeof($thing); $x++) {
                 $char = '"';
+                //<tr onclick='processRows(".$char.$thing[$x][1].$char.")>
                 echo "
-           <tr onclick='processRows(".$char.$thing[$x][1].$char.")>
+           <tr>
                <td>".$thing[$x][0]."</td>
                <td>".$thing[$x][1]."</td>
            </tr>";

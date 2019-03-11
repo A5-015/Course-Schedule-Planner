@@ -403,7 +403,7 @@ jQuery(document).ready(function($){
       div.append($('<span>')
         .addClass('weektoday')
         .css('width', '100%')
-        .text(this.miscUcfirstString(time.format(this.conf.weekday.dayline.format)))
+        .text(this.miscUcfirstString(time.format('dddd')))
       );
       if (i == days.length - 1 && this.mobileQuery() == 'desktop'){
         div.append($('<button>', {

@@ -87,13 +87,6 @@ class Database
     }
 
 
-
-
-
-
-
-
-
     // public function querySet($passedQuery, $passedArray, $returnArray)
     // {
     //     $x =0;
@@ -139,28 +132,33 @@ class Database
 
     public function returnMajorReq($majorID)
     {
-        $courseIDQuery = "SELECT FK_course FROM appears WHERE categoryID = $majorID AND required = 'true'";
+        $courseIDQuery = "SELECT title, peoplesoftID FROM course
+                          INNER JOIN appears
+                          ON appears.FK_course = course.PK_course
+                          WHERE categoryID = '$majorID'
+                          AND required = 'true'";
         $courseIDList = $this->connection->query($courseIDQuery);
-        $listNum = $courseIDList->num_rows;
-        $courseIDArray[] = $this->arrayify($courseIDList);
 
-        $x=0;
-        while ($x < $listNum) {
-            $courseIDArr[] = $courseIDArray[0][$x][0];
-            $x++;
-        }
+        $courseIDArray = $this->arrayify($courseIDList);
 
-        $reqArray = [];
-        $x=0;
-        while ($x < sizeof($courseIDArr)) {
-            $reqQuery = "SELECT title, peoplesoftID FROM course WHERE PK_course = $courseIDArr[$x]";
-            $reqList = $this->connection->query($reqQuery);
-            $reqResult = mysqli_fetch_row($reqList);
-            array_push($reqArray, $reqResult);
-            $x++;
-        }
+        //
+        // $x=0;
+        // while ($x < $listNum) {
+        //     $courseIDArr[] = $courseIDArray[0][$x][0];
+        //     $x++;
+        // }
+        //
+        // $reqArray = [];
+        // $x=0;
+        // while ($x < sizeof($courseIDArr)) {
+        //     $reqQuery = "SELECT title, peoplesoftID FROM course WHERE PK_course = $courseIDArr[$x]";
+        //     $reqList = $this->connection->query($reqQuery);
+        //     $reqResult = mysqli_fetch_row($reqList);
+        //     array_push($reqArray, $reqResult);
+        //     $x++;
+        // }
 
-        return $reqArray;
+        return $courseIDArray;
     }
 
     // public function returnCourses2($keyword)

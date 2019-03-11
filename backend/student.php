@@ -23,7 +23,7 @@ class Student
     public $completedReqs=[];
     public $constraints=[
       "9AM"   => 0,
-      "PE"    => 0,
+      "PHYED"    => 0,
       "CCOL"  => 0,
       "CDAD"  => 0,
       "CCEA"  => 0,
@@ -62,6 +62,8 @@ class Student
 
     public function shareSelectedCourses($peoplesoftID)
     {
+
+        $selectedPeopleSoft = [];
         $simplifiedSelected = $this->returnSelectedCourses();
         $i=0;
         while ($i<sizeof($simplifiedSelected)) {
@@ -129,7 +131,7 @@ class Student
     }
 
 
-
+    //instructions: "newselection" and "completedselection"
     public function returnFiltered($instruction)
     {
         $allCourses = $this->db->returnCourses(true, "null");
@@ -143,7 +145,7 @@ class Student
         $allCourses = $this->filterByTitle($allCourses, "CCOL");
         $allCourses = $this->filterByTitle($allCourses, "PHYED");
 
-        if ($instruction == "newselection") {
+        if ($instruction === "newselection") {
             $trial = $this->returnSelectedCourses();
             for ($x = 0; $x < sizeof($trial); $x++) {
                 $allCourses = $this->filterRequirements($allCourses, $trial[$x]);
@@ -193,7 +195,7 @@ class Student
     }
 }
 
-$student = new Student();
+//$student = new Student();
 
 // $student->setMajor("72");
 // $thing = $student->major;

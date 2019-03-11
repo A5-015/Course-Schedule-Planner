@@ -44,6 +44,8 @@ echo '
       ';
 
         $thing = $_SESSION["selectedCourses"];
+        $earliestHour = 9;
+        $latestHour = 18;
 
         foreach($thing as $class){
            foreach($class as $individualDates){
@@ -96,8 +98,8 @@ echo '
         weekday: {
           timeline: {
             intervalMinutes: 30,
-            fromHour: 7,
-            toHour: 19
+            fromHour: '.$earliestHour.',
+            toHour: '.$latestHour.'
           }
         },
 
