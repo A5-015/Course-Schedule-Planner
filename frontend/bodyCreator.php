@@ -1,8 +1,9 @@
 <?php
-
+// Make sure that BodyItem class is included
 require_once("bodyItemCreator.php");
 
 // Generating the body in terms of HTML
+// Page content is displayed in a table to show a more organized structure
 echo "
       <body>
         <table class='skelethon'>
@@ -47,7 +48,7 @@ echo "
                     $insert -> alreadyTakenClasses();
                     $insert -> bodyText("Please select courses that you have already completed");
                     $insert -> searchBox("search2");
-                    $insert -> checBox();
+                    $insert -> checkBox();
                     $insert -> submitButton("SubmitButton", "Continue");
 
                   // Step 4
@@ -58,7 +59,7 @@ echo "
                     $insert -> selectedClasses();
                     $insert -> bodyText("Please select courses you want to take");
                     $insert -> searchBox("search2");
-                    $insert -> checBox();
+                    $insert -> checkBox();
                     $insert -> submitButton("SubmitButton", "Print Your Schedule");
 
                   // Step 5
@@ -99,12 +100,14 @@ echo "
             </td>
             <td>";
 
+              // Handles the side by side division used in the step 4
               if ($step == 4) {
                 $insert -> formatting("<table>");
                 $insert -> calendar("iframe");
                 $insert -> formatting("</table>");
               }
 
+// Close the tags for the table
 echo "
             </td>
           </tr>

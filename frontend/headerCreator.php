@@ -1,5 +1,7 @@
 <?php
-
+//////////////////////////////////////////////////////////////////////////
+// Just connecting individual CSS and JavaScript files with the system  //
+//////////////////////////////////////////////////////////////////////////
 echo "
       <!DOCTYPE html>
       <html>
@@ -8,13 +10,16 @@ echo "
 
         <meta charset='UTF-8'>";
 
-        // Refresh page once to prevent accidental form resubmission
+        // Refresh page only once to prevent accidental form resubmission
         if ($_SESSION["refresh"] == 1) {
+
+            // Revert page refresh block to zero
             $_SESSION["refresh"] = 0;
             echo "<script> window.location = window.location.href; </script>";
         }
 
-echo "
+        // Include the CSS and JavaScript files
+        echo "
         <link rel='stylesheet' type='text/css' href='./frontend/static/css/main.css' media='all'>
 
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>

@@ -1,6 +1,21 @@
 <?php
+
+/**************************************************
+* Barkin Simsek, bs3528
+* Nishant Aswani, nsa325
+* March 12, 2019
+*
+* Object-Oriented Programming, Spring 2019
+* Term Project
+*
+* https://nyuad.app/classes
+**************************************************/
+
 // Start a unique session per user to store varaibles on the users browser
 session_start();
+
+// Turn off warning that are not related to compilation
+//error_reporting(E_ERROR | E_PARSE);
 
 // Include student class
 require_once("./backend/student.php");

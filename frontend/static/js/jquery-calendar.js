@@ -1,3 +1,7 @@
+/////////////////////////////////////////////
+// JavaScript Code Needed for the Calendar //
+/////////////////////////////////////////////
+
 /*
  * @class Calendar ~jquery-calendar plugin~ (https://github.com/ArrobeFr/jquery-calendar-bs4)
  * @author Developped by Arrobe (https://www.arrobe.fr)

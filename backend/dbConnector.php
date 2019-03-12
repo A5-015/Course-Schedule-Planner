@@ -62,7 +62,6 @@ class Database
     }
 
     //function that converts a 2d array into a 1D array by grabbing the first index of the 2D array
-    //formerly known as fixArray
     public function fixArray($size, $array)
     {
         $i=0;
@@ -77,7 +76,6 @@ class Database
     }
 
     //function that converts an unnecessarily nested 2d array into a 1D array
-    //formerly knonwn as make1D
     public function make1D($array)
     {
         $i=0;
